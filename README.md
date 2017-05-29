@@ -99,7 +99,7 @@ const failingFiles = files.concat([420, true, `uhhhhh wait`])
 makeAllRelativePaths(dir, failingFiles) // TypeError: Path must be a string. Received undefined
 ```
 
-Barf-o-rama. ☹
+Barf-o-rama. 😑
 
 Finally, we get to the point of this README!
 
@@ -125,10 +125,8 @@ const safeMakeRelative = R.curry(
     fileList
   )
 )
+
+safeMakeRelative(dir, failingFiles) // Expected to be given objects, instead received: 420, true, `uhhhhh wait`
 ```
 
 Now we can safely pass in a bad dataset, and it won't fail, it'll just return a string!
-
-```js
-safeMakeRelative(dir, failingFiles) // Expected to be given objects, instead received: 420, true, `uhhhhh wait`
-```
