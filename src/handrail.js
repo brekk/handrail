@@ -21,7 +21,6 @@ const trace = xtrace(console.log)
 
 // add safety to your pipes!
 
-// the baluster / things that form the railing
 export const rail = curry(
   (safety, divider, input) => {
     if (!isFn(safety)) {
@@ -48,9 +47,11 @@ export const multiRail = curry(
 const safeWarn = curry((safety, badPath, goodPath) => {
   if (!isFn(safety)) {
     return `handrail: Expected safety to be a function.`
-  } else if (!isFn(badPath)) {
+  }
+  if (!isFn(badPath)) {
     return `handrail: Expected badPath to be a function.`
-  } else if (!isFn(goodPath)) {
+  }
+  if (!isFn(goodPath)) {
     return `handrail: Expected goodPath to be a function.`
   }
 })

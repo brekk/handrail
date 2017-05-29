@@ -23,7 +23,7 @@ module.exports = {
       description: `do a per file conversion from /src to /lib`,
       files: {
         description: `convert files`,
-        script: `babel src -d bin --ignore *.spec.js`
+        script: `babel src -d lib --ignore *.spec.js`
       },
       script: allNPS(
         `build.files`,
