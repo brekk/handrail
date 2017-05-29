@@ -9,6 +9,8 @@
 ## handrail
 ### a toolset for adding safety to your functional pipelines
 
+**This module is very much a work-in-progress!**
+
 Let's say I have a contrived problem: I want to grab the value `x` from my object, if it exists.
 
 ```js
@@ -90,7 +92,7 @@ const dir = `./hey/cool/pants/`
 makeAllRelativePaths(dir, files) // [`../../../A.js`, ...etc]
 ```
 
-Great! So now what happens if we change our harness to add some stuff we _know_ won't work?
+Great! So now what happens if we change our harness to add some stuff we **know** won't work?
 
 ```js
 const failingFiles = files.concat([420, true, `uhhhhh wait`])
@@ -118,7 +120,7 @@ const notObject = (o) => typeof o !== `object`
 const safeMakeRelative = R.curry(
   (directory, fileList) => handrail(
     getNestedPath,
-    (x) => `Expected to be given objects, instead received: ${x.filter(notObject)}`,
+    (x) => `Expected to be given objects, instead received: ${x.filter(notObject).join(`, `)}`,
     makeAllRelativePaths(directory),
     fileList
   )
@@ -128,5 +130,5 @@ const safeMakeRelative = R.curry(
 Now we can safely pass in a bad dataset, and it won't fail, it'll just return a string!
 
 ```js
-safeMakeRelative(dir, failingFiles)
+safeMakeRelative(dir, failingFiles) // Expected to be given objects, instead received: 420, true, `uhhhhh wait`
 ```
