@@ -11,6 +11,8 @@ import {
   fold
 } from './index'
 
+const grab = fold(identity, identity)
+
 const random = (
   () => {
     const lower = (char) => char.toLowerCase()
@@ -128,10 +130,10 @@ test(`rail / baluster should Leftify a bad input`, (t) => {
 })
 
 test(`rail should fail with a Left when safety or divider is not a function`, (t) => {
-  const badSafety = rail({}, identity, `whatever`).fold(identity, identity)
-  t.is(badSafety, `rail: Expected safety to be a function.`)
-  const badDivider = rail(identity, {}, `whatever`).fold(identity, identity)
-  t.is(badDivider, `rail: Expected divider to be a function.`)
+  const badSafety = rail({}, identity, `whatever`)
+  t.is(grab(badSafety), `rail: Expected safety to be a function.`)
+  const badDivider = rail(identity, {}, `whatever`)
+  t.is(grab(badDivider), `rail: Expected divider to be a function.`)
 })
 
 test(`handrail should allow for adding simple rails to a given function`, (t) => {
@@ -167,13 +169,13 @@ test(`handrail should allow for adding simple rails to a given function`, (t) =>
   t.deepEqual(good, Right(input2))
 })
 
-test(`handrail should fail if safety, badPath or goodPath is a function`, (t) => {
-  const x = handrail({}, identity, identity, `whatever`).fold(identity, identity)
-  t.deepEqual(x, `handrail: Expected safety to be a function.`)
-  const y = handrail(identity, {}, identity, `whatever`).fold(identity, identity)
-  t.deepEqual(y, `handrail: Expected badPath to be a function.`)
-  const z = handrail(identity, identity, {}, `whatever`).fold(identity, identity)
-  t.deepEqual(z, `handrail: Expected goodPath to be a function.`)
+test(`handrail should fail if safety, badPath or goodPath is not a function`, (t) => {
+  const x = handrail({}, identity, identity, `whatever`)
+  t.deepEqual(grab(x), `handrail: Expected safety to be a function.`)
+  const y = handrail(identity, {}, identity, `whatever`)
+  t.deepEqual(grab(y), `handrail: Expected badPath to be a function.`)
+  const z = handrail(identity, identity, {}, `whatever`)
+  t.deepEqual(grab(z), `handrail: Expected goodPath to be a function.`)
 })
 
 // test(`railing / balustrade should allow for adding structured rails for handrail programming`,
