@@ -16,6 +16,7 @@
   },
   "ignores": ["*.js", "build/**"],
   "rules": {
+    "no-console": 2,
     "valid-jsdoc": [2, {
       "prefer": {
         "return": "returns"
@@ -75,8 +76,13 @@
       "js": "never",
       "validation": "always",
       "task": "always"
-    }]
+    }],
+    "eslint-comments/disable-enable-pair": 2,
+    "eslint-comments/no-duplicate-disable": 2,
+    "eslint-comments/no-unlimited-disable": 2,
+    "eslint-comments/no-unused-disable": 2,
+    "eslint-comments/no-unused-enable": 2
   },
   "extends": ["standard"],
-  "plugins": ["babel", "fp", "import"]
+  "plugins": ["babel", "fp", "import", "eslint-comments"]
 }
