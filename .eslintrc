@@ -16,6 +16,7 @@
   },
   "ignores": ["*.js", "build/**"],
   "rules": {
+    "no-console": 2,
     "valid-jsdoc": [2, {
       "prefer": {
         "return": "returns"

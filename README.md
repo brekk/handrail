@@ -89,6 +89,7 @@ Cool. So with good inputs, we can do this:
 const gen = (filename) => ({v2: {filename: filename + `.js` }})
 const files = `ABCDE`.split(``).map(gen) // a simple generated list
 const dir = `./hey/cool/pants/`
+// #1 (See `./example.js`, ⌘+F > #1.)
 makeAllRelativePaths(dir, files) // [`../../../A.js`, ...etc]
 ```
 
@@ -126,6 +127,7 @@ const safeMakeRelative = R.curry(
   )
 )
 
+// #2 (See `./example.js`, ⌘+F > #2.)
 safeMakeRelative(dir, failingFiles) // Expected to be given all objects, instead received: 420, true, `uhhhhh wait`
 ```
 
@@ -142,4 +144,6 @@ const safeMakeRelativeWithStack = R.curry(
     fileList
   )
 )
+// #3 (See `./example.js`, ⌘+F > #3.)
+console.log(`#3.`, safeMakeRelativeWithStack(dir, failingFiles))
 ```

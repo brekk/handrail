@@ -7,8 +7,8 @@ const {
 const getNestedPath = R.path([`v2`, `filename`])
 const relative = R.curry((a, b) => nodePath.relative(a, b))
 
-const xtrace = R.curry((l, a, b) => { l(a, b); return b })
-const trace = xtrace(console.log)
+// const xtrace = R.curry((l, a, b) => { l(a, b); return b })
+// const trace = xtrace(console.log)
 
 const makeAllRelativePaths = R.curry(
   (directory, fileList) => R.pipe(
@@ -33,7 +33,6 @@ const gen = (filename) => ({
 const files = `ABCDEFGHIJKLMNOPQRSTUVWXYZ`.split(``).map(gen)
 
 const dir = `./hey/cool/pants/`
-console.log(makeAllRelativePaths(dir, files)) // eslint-disable-line
 
 const failingFiles = files.concat([false, null, 20])
 /*
@@ -42,23 +41,34 @@ makeAllRelativePaths(dir, failingFiles)
 */
 const notObject = (x) => typeof x !== `object`
 
+const expectAllObjects = (x) => ([
+  `Expected to be given all objects,`,
+  `instead received: ${x.filter(notObject).join(`, `)}`
+]).join(` `)
+const errorize = (x) => (new Error(x))
+
 const safeMakeRelative = R.curry(
   (directory, fileList) => handrail(
     getNestedPath,
-    (x) => `Expected to be given all objects, instead received: ${x.filter(notObject).join(`, `)}`,
+    expectAllObjects,
     makeAllRelativePaths(directory),
     fileList
   )
 )
-console.log(safeMakeRelative(dir, failingFiles)) // eslint-disable-line
 
 const safeMakeRelativeWithStack = R.curry(
   (directory, fileList) => handrail(
     getNestedPath,
-    (x) => new Error(`Expected to be given all objects, instead received: ${x.filter(notObject).join(`, `)}`),
+    R.pipe(expectAllObjects, errorize),
     makeAllRelativePaths(directory),
     fileList
   )
 )
 
-console.log(safeMakeRelativeWithStack(dir, failingFiles)) // eslint-disable-line
+/* eslint-disable fp/no-unused-expression */
+/* eslint-disable no-console */
+console.log(`#1.`, makeAllRelativePaths(dir, files))
+console.log(`#2.`, safeMakeRelative(dir, failingFiles))
+console.log(`#3.`, safeMakeRelativeWithStack(dir, failingFiles))
+/* eslint-enable fp/no-unused-expression */
+/* eslint-enable no-console */
