@@ -1,6 +1,6 @@
 {
   "name": "handrail",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a toolset for logical disjunctions / safety for your functional pipelines",
   "main": "index.js",
   "author": "brekk",
