@@ -4,6 +4,7 @@ import allPass from 'ramda/src/allPass'
 import prop from 'ramda/src/prop'
 import propSatisfies from 'ramda/src/propSatisfies'
 import all from 'ramda/src/all'
+// import K from 'ramda/src/always'
 
 /* istanbul ignore next */
 const two = (key, x, F) => F[key](x)
@@ -20,7 +21,7 @@ export const ap = arity.two(`ap`)
 export const bimap = arity.three(`bimap`)
 export const fold = arity.three(`fold`)
 
-const type = curry((t, x) => typeof x === t) // eslint-disable-line
+const type = curry((t, x) => typeof x === t) // eslint-disable-line valid-typeof
 const isObject = type(`object`)
 export const isFn = type(`function`)
 // const propIsObject = propSatisfies(isObject)
@@ -45,7 +46,6 @@ export const guided = curry((direction, x) => (
     direction(x)
   )
 )
-
 export const {
   Right,
   Left

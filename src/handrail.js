@@ -20,7 +20,6 @@ const trace = xtrace(console.log)
 // */
 
 // add safety to your pipes!
-
 export const rail = curry(
   (safety, divider, input) => {
     if (!isFn(safety)) {

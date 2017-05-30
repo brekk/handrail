@@ -30,14 +30,14 @@ Let's say the scope of our original contrived problem changes, now we want to ac
 
 ```js
 const getX2 = (a) => a.v2.x // equivalent to R.path([`v2`, `x`])
-console.log(getX2({v2: {x: 420}})) // 420
+console.log(getX2({v2: {x: 1000}})) // 1000
 ```
 
 As you are probably aware, now we can get errors to throw with bad inputs:
 
 ```js
 const getX2 = (a) => a.v2.x // equivalent to R.path([`v2`, `x`])
-console.log(getX2(420)) // TypeError: Cannot read property 'x' of undefined
+console.log(getX2(10000)) // TypeError: Cannot read property 'x' of undefined
 ```
 
 While we're dealing with this problem, it turns out there's a new memo from the powers that be about the contrived problem, and now it has some meat: now we need a function which:
@@ -120,13 +120,26 @@ const notObject = (o) => typeof o !== `object`
 const safeMakeRelative = R.curry(
   (directory, fileList) => handrail(
     getNestedPath,
-    (x) => `Expected to be given objects, instead received: ${x.filter(notObject).join(`, `)}`,
+    (x) => `Expected to be given all objects, instead received: ${x.filter(notObject).join(`, `)}`,
     makeAllRelativePaths(directory),
     fileList
   )
 )
 
-safeMakeRelative(dir, failingFiles) // Expected to be given objects, instead received: 420, true, `uhhhhh wait`
+safeMakeRelative(dir, failingFiles) // Expected to be given all objects, instead received: 420, true, `uhhhhh wait`
 ```
 
 Now we can safely pass in a bad dataset, and it won't fail, it'll just return a string!
+
+_NB: If you need to deal with an error stack, you can have the second parameter return an Error:_
+
+```js
+const safeMakeRelativeWithStack = R.curry(
+  (directory, fileList) => handrail(
+    getNestedPath,
+    (x) => new Error(`Expected to be given all objects, instead received: ${x.filter(notObject.join(`, `))}`),
+    makeAllRelativePaths(directory),
+    fileList
+  )
+)
+```
