@@ -209,3 +209,5 @@ Wow, `rail` and `handrail` are cool!
 
 **Q**: What happens if I have more than one point of failure?
 **A**: Use `multiRail`! (For those of you more well-versed in FP, `multiRail = chain(rail(safety, badPath))`)
+
+(Better example forthcoming here.)
