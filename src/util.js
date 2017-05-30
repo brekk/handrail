@@ -7,21 +7,23 @@ import all from 'ramda/src/all'
 // import K from 'ramda/src/always'
 
 /* istanbul ignore next */
-const two = (key, x, F) => F[key](x)
+function Ｘbinary(key, x, F) { return F[key](x) }
 /* istanbul ignore next */
-const three = (key, x, y, F) => F[key](x, y)
+function Ｘternary(key, x, y, F) { return F[key](x, y) }
 /* istanbul ignore next */
 const arity = {
   /* istanbul ignore next */
-  two: curry(two),
+  two: curry(Ｘbinary),
   /* istanbul ignore next */
-  three: curry(three)
+  three: curry(Ｘternary)
 }
 export const ap = arity.two(`ap`)
 export const bimap = arity.three(`bimap`)
 export const fold = arity.three(`fold`)
 
-const type = curry((t, x) => typeof x === t) // eslint-disable-line valid-typeof
+const type = curry(
+  function Ｘtype(t, x) { return typeof x === t } // eslint-disable-line valid-typeof
+)
 const isObject = type(`object`)
 export const isFn = type(`function`)
 // const propIsObject = propSatisfies(isObject)
@@ -40,12 +42,13 @@ export const isLeft = allPass([
   prop(`l`)
 ])
 
-export const guided = curry((direction, x) => (
+export const guided = curry(function Ｘguided(direction, x) {
+  return (
     isEither(x) ?
     x :
     direction(x)
   )
-)
+})
 export const {
   Right,
   Left

@@ -7,6 +7,18 @@ const {
 const getNestedPath = R.path([`v2`, `filename`])
 const relative = R.curry((a, b) => nodePath.relative(a, b))
 
+/* eslint-disable fp/no-unused-expression */
+/* eslint-disable no-console */
+
+// for printing porpoises
+const bar = R.curry((x, y) => {
+  const quadLaser = R.range(0, 20).map(R.always(`ʬ`)).join(`ʬ`)
+  const eightLaser = (title) => (quadLaser + ` ${title} ` + x + ` ` + quadLaser)
+  const top = eightLaser(`start`)
+  const bottom = eightLaser(`  end`)
+  console.log(top + `\n`, y, `\n` + bottom)
+})
+
 // const xtrace = R.curry((l, a, b) => { l(a, b); return b })
 // const trace = xtrace(console.log)
 
@@ -34,6 +46,8 @@ const files = `ABCDEFGHIJKLMNOPQRSTUVWXYZ`.split(``).map(gen)
 
 const dir = `./hey/cool/pants/`
 
+bar(`#1.`, makeAllRelativePaths(dir, files))
+
 const failingFiles = files.concat([false, null, 20])
 /*
 // these will fail:
@@ -56,6 +70,8 @@ const safeMakeRelative = R.curry(
   )
 )
 
+bar(`#2.`, safeMakeRelative(dir, failingFiles))
+
 const safeMakeRelativeWithStack = R.curry(
   (directory, fileList) => handrail(
     getNestedPath,
@@ -64,11 +80,6 @@ const safeMakeRelativeWithStack = R.curry(
     fileList
   )
 )
-
-/* eslint-disable fp/no-unused-expression */
-/* eslint-disable no-console */
-console.log(`#1.`, makeAllRelativePaths(dir, files))
-console.log(`#2.`, safeMakeRelative(dir, failingFiles))
-console.log(`#3.`, safeMakeRelativeWithStack(dir, failingFiles))
+bar(`#3.`, safeMakeRelativeWithStack(dir, failingFiles))
 /* eslint-enable fp/no-unused-expression */
 /* eslint-enable no-console */

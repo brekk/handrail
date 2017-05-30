@@ -21,7 +21,7 @@ const trace = xtrace(console.log)
 
 // add safety to your pipes!
 export const rail = curry(
-  (safety, divider, input) => {
+  function ＸＸＸrail(safety, divider, input) {
     if (!isFn(safety)) {
       return GuidedLeft(`rail: Expected safety to be a function.`)
     }
@@ -37,35 +37,43 @@ export const rail = curry(
 )
 
 export const multiRail = curry(
-  (safety, divider, input) => chain(
-    rail(safety, divider),
-    input
-  )
+  function ＸＸＸmultiRail(safety, divider, input) {
+    return chain(
+      rail(safety, divider),
+      input
+    )
+  }
 )
 
-const safeWarn = curry((safety, badPath, goodPath) => {
-  if (!isFn(safety)) {
-    return `handrail: Expected safety to be a function.`
+const safeWarn = curry(
+  function ＸＸＸsafeWarn(safety, badPath, goodPath) {
+    if (!isFn(safety)) {
+      return `handrail: Expected safety to be a function.`
+    }
+    if (!isFn(badPath)) {
+      return `handrail: Expected badPath to be a function.`
+    }
+    if (!isFn(goodPath)) {
+      return `handrail: Expected goodPath to be a function.`
+    }
   }
-  if (!isFn(badPath)) {
-    return `handrail: Expected badPath to be a function.`
-  }
-  if (!isFn(goodPath)) {
-    return `handrail: Expected goodPath to be a function.`
-  }
-})
+)
 
 const internalRailSafety = curry(
-  (safety, badPath, goodPath) => rail(
-    K(allFunctions([safety, badPath, goodPath])),
-    K(safeWarn(safety, badPath, goodPath))
-  )
+  function ＸＸＸinternalRailSafety(safety, badPath, goodPath) {
+    return rail(
+      K(allFunctions([safety, badPath, goodPath])),
+      K(safeWarn(safety, badPath, goodPath))
+    )
+  }
 )
 
 export const handrail = curry(
-  (safety, badPath, goodPath, input) => pipe(
-    internalRailSafety(safety, badPath, goodPath),
-    multiRail(safety, badPath),
-    map(goodPath)
-  )(input)
+  function ＸＸＸhandrail(safety, badPath, goodPath, input) {
+    return pipe(
+      internalRailSafety(safety, badPath, goodPath),
+      multiRail(safety, badPath),
+      map(goodPath)
+    )(input)
+  }
 )
