@@ -1,22 +1,21 @@
 const curry = require(`ramda/src/curry`)
 const utils = require(`nps-utils`)
-const SHEBANG = `#!/usr/bin/env node`
-const prepend = curry((toPrepend, file) => `echo "${toPrepend}\n$(cat ${file})" > ${file}`)
+const {version} = require(`./package.json`)
+
+const prepend = curry((toPrepend, file) => `echo "${toPrepend} $(cat ${file})" > ${file}`)
 const append = curry((toAppend, file) => `echo "${toAppend}" >> ${file}`)
 const createWithText = curry((text, file) => `echo "${text}" > ${file}`)
-const chmod = curry((permissions, file) => `chmod ${permissions} ${file}`)
-const makeExecutable = chmod(`755`)
 const {
   concurrent: all,
   series,
-  rimraf: rm
+  mkdirp
 } = utils
 const {
   nps: allNPS
 } = all
 const COSTFILE = `./costs`
-// const DISTRIBUTABLE = `./dist/binoculars.js`
-/* eslint-disable max-len */
+const MINIFIED = `./dist/handrail.min.js`
+const MINIFIED_BROWSER = `./dist/handrail.browser.min.js`
 module.exports = {
   scripts: {
     build: {
@@ -33,7 +32,13 @@ module.exports = {
     buildWithRollup: {
       description: `generate executable`,
       script: series(
-        `rollup -c config/commonjs.js`
+        `rollup -c config/commonjs.js`,
+        mkdirp(`dist`),
+        `browserify --node -s handrail ./lib/index.js > ${MINIFIED_BROWSER}`,
+        `uglifyjs --compress --mangle -o ${MINIFIED} -- ./lib/index.js`,
+        `uglifyjs --compress --mangle -o ${MINIFIED_BROWSER} -- ${MINIFIED_BROWSER}`,
+        prepend(`/* handrail v.${version} */`, MINIFIED),
+        prepend(`/* handrail v.${version} */`, MINIFIED_BROWSER)
       )
     },
     cost: {
@@ -58,24 +63,33 @@ module.exports = {
     },
     precommit: {
       description: `the tasks auto-run before commits`,
-      script: allNPS(`dist`, `test`, `cost`)
+      script: allNPS(`dist`, `test`, `cost`, `regenerate.readme`)
     },
     publish: {
       description: `the tasks to run at publish-time`,
-      script: `npm run build`
+      script: allNPS(`build`, `regenerate.readme`)
     },
     test: {
+      description: `run lint and tests`,
+      script: allNPS(`lint`, `test.covered`),
       covered: {
         description: `run covered tests`,
         script: `nyc ava --verbose src/*.spec.js`
       },
-      description: `run lint and tests`,
       log: {
         description: `run tests and save logfile`,
         script: `npm run test:covered > test-output.log`
       },
-      script: allNPS(`lint`, `test.covered`)
+      readme: {
+        description: `run tests on the example that generates the README`,
+        script: `ava example.literate.js`
+      }
+    },
+    regenerate: {
+      readme: {
+        description: `run ljs2 against example.literate.js to get our README.md file regenerated`,
+        script: `ljs2 example.literate.js -o README.md`
+      }
     }
   }
 }
-/* eslint-enable max-len */

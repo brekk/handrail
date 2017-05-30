@@ -4,14 +4,18 @@ import {
   Right,
   Left,
   GuidedRight,
-  isRight,
-  isLeft,
+  assertions,
   rail,
   handrail,
   fold
 } from './index'
+const {
+  isRight,
+  isLeft
+} = assertions
 
 const grab = fold(identity, identity)
+const messenger = pipe(grab, prop(`message`))
 
 const random = (
   () => {
@@ -88,13 +92,13 @@ test(`rail / baluster should Rightify a good input`, (t) => {
   t.plan(3)
   const input = random.keyValue(5)
   const [k, v] = input
-  const safety = pipe(prop(k), (x) => !!x)
+  const assertion = pipe(prop(k), (x) => !!x)
   const rationale = K(`this function won't ever do anything`)
   const inputObject = {
     [k]: v,
     xxx: `coolpants`
   }
-  const good = rail(safety, rationale, inputObject)
+  const good = rail(assertion, rationale, inputObject)
   t.deepEqual(good, Right(inputObject))
   return fold(
     t.fail,
@@ -110,7 +114,7 @@ test(`rail / baluster should Leftify a bad input`, (t) => {
   t.plan(2)
   const input = random.keyValue(5)
   const [k, v] = input
-  const safety = pipe(prop(`yyy`), (x) => !!x)
+  const assertion = pipe(prop(`yyy`), (x) => !!x)
   const pseudo = random.alphaString(10)
   const errorString = `Random error: ${pseudo}`
   const rationale = K(errorString)
@@ -118,7 +122,7 @@ test(`rail / baluster should Leftify a bad input`, (t) => {
     [k]: v,
     xxx: `coolpants`
   }
-  const bad = rail(safety, rationale, inputObject)
+  const bad = rail(assertion, rationale, inputObject)
   t.deepEqual(bad, Left(errorString))
   return fold(
     (l) => {
@@ -129,18 +133,24 @@ test(`rail / baluster should Leftify a bad input`, (t) => {
   )
 })
 
-test(`rail should fail with a Left when safety or divider is not a function`, (t) => {
+test(`rail should fail with a Left when assertion is not a function`, (t) => {
   const badSafety = rail({}, identity, `whatever`)
-  t.is(grab(badSafety), `rail: Expected safety to be a function.`)
+  t.is(messenger(badSafety), `rail: Expected assertion to be function.`)
+})
+test(`rail should fail with a Left when wrongPath is not a function`, (t) => {
   const badDivider = rail(identity, {}, `whatever`)
-  t.is(grab(badDivider), `rail: Expected divider to be a function.`)
+  t.is(messenger(badDivider), `rail: Expected wrongPath to be function.`)
+})
+test(`rail should fail with a Left when assertion and wrongPath are not functions`, (t) => {
+  const dumbInputs = rail({}, {}, `whatever`)
+  t.is(messenger(dumbInputs), `rail: Expected assertion, wrongPath to be functions.`)
 })
 
 test(`handrail should allow for adding simple rails to a given function`, (t) => {
   t.plan(2)
   const input = random.keyValue(5)
   const [k, v] = input
-  const safety = pipe(prop(`yyy`), Boolean)
+  const assertion = pipe(prop(`yyy`), Boolean)
   const myFunction = (x) => {
     x.yyy += 1000 // eslint-disable-line fp/no-mutation
     return x
@@ -156,7 +166,7 @@ test(`handrail should allow for adding simple rails to a given function`, (t) =>
   const badObject = {
     ugh: `crapdammit ` + random.alphaString(4)
   }
-  const safeFunction = handrail(safety, (x) => ({
+  const safeFunction = handrail(assertion, (x) => ({
     ...badObject,
     ...x
   }), myFunction)
@@ -169,18 +179,33 @@ test(`handrail should allow for adding simple rails to a given function`, (t) =>
   t.deepEqual(good, Right(input2))
 })
 
-test(`handrail should fail if safety, badPath or goodPath is not a function`, (t) => {
+test(`handrail should fail if assertion is not a function`, (t) => {
   const x = handrail({}, identity, identity, `whatever`)
-  t.deepEqual(grab(x), `handrail: Expected safety to be a function.`)
+  t.deepEqual(messenger(x), `handrail: Expected assertion to be function.`)
+})
+test(`handrail should fail if wrongPath is not a function`, (t) => {
   const y = handrail(identity, {}, identity, `whatever`)
-  t.deepEqual(grab(y), `handrail: Expected badPath to be a function.`)
+  t.deepEqual(messenger(y), `handrail: Expected wrongPath to be function.`)
+})
+test(`handrail should fail if rightPath is not a function`, (t) => {
   const z = handrail(identity, identity, {}, `whatever`)
-  t.deepEqual(grab(z), `handrail: Expected goodPath to be a function.`)
+  t.deepEqual(messenger(z), `handrail: Expected rightPath to be function.`)
+})
+test(`handrail should fail with multiple assertions when there are multiple failures: 1`, (t) => {
+  const a = handrail({}, {}, {}, `whatever`)
+  t.deepEqual(messenger(a), `handrail: Expected assertion, wrongPath, rightPath to be functions.`)
+})
+test(`handrail should fail with multiple assertions when there are multiple failures: 2`, (t) => {
+  const b = handrail(identity, {}, {}, `whatever`)
+  t.deepEqual(messenger(b), `handrail: Expected wrongPath, rightPath to be functions.`)
+})
+test(`handrail should fail with multiple assertions when there are multiple failures: 3`, (t) => {
+  const c = handrail({}, identity, {}, `whatever`)
+  t.deepEqual(messenger(c), `handrail: Expected assertion, rightPath to be functions.`)
+})
+test(`handrail should fail with multiple assertions when there are multiple failures: 4`, (t) => {
+  const d = handrail({}, {}, identity, `whatever`)
+  t.deepEqual(messenger(d), `handrail: Expected assertion, wrongPath to be functions.`)
 })
 
-// test(`railing / balustrade should allow for adding structured rails for handrail programming`,
-//   (t) => {
-//
-//   }
-// )
 /* eslint-enable fp/no-unused-expression */

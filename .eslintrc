@@ -14,7 +14,6 @@
     "ecmaVersion": 7,
     "sourceType": "module"
   },
-  "ignores": ["*.js", "build/**"],
   "rules": {
     "no-console": 2,
     "valid-jsdoc": [2, {
@@ -39,10 +38,6 @@
       "varsIgnorePattern": "^__"
     }],
     "object-curly-spacing": 0,
-    "object-property-newline": [2, {
-      "allowMultiplePropertiesPerLine": false
-    }],
-    "object-curly-newline": [2, { "minProperties": 1 }],
     "one-var": 0,
     "operator-linebreak": [2, "after"],
     "prefer-reflect": 0,
