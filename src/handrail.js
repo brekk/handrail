@@ -1,79 +1,86 @@
 import pipe from 'ramda/src/pipe'
 import K from 'ramda/src/always'
 import curry from 'ramda/src/curry'
+import identity from 'ramda/src/identity'
 import map from 'ramda/src/map'
 import chain from 'ramda/src/chain'
 
 import {
-  isFn,
+  judgeObject,
+  // allFunctions,
+  allPropsAreFunctions,
+  rejectNonFunctions
+} from './assertions'
+
+import {
+  plural,
   GuidedLeft,
-  GuidedRight,
-  allFunctions
+  GuidedRight
 } from './util'
 
-/*
-const xtrace = curry((l, a, b) => {
-  l(a, b) // eslint-disable-line
-  return b
-})
-const trace = xtrace(console.log)
-// */
+// NB: relative to how daggy defines its toString methods and how the error stack looks,
+// we're using the convention of prefixing ＸＸＸ to the main functions so that they aren't
+// anonymous and scan reasonably well
+
+const yell = curry((scope, errors) => (
+  new Error(`${scope}: Expected ${errors.join(`, `)} to be function${plural(errors)}.`)
+))
+
+const safeRailInputs = function ＸＸＸsafeRailInputs(inputs) {
+  // unmetExpectations
+  return pipe(
+    rejectNonFunctions,
+    Object.keys
+  )(inputs)
+}
 
 // add safety to your pipes!
 export const rail = curry(
-  function ＸＸＸrail(safety, divider, input) {
-    if (!isFn(safety)) {
-      return GuidedLeft(`rail: Expected safety to be a function.`)
-    }
-    if (!isFn(divider)) {
-      return GuidedLeft(`rail: Expected divider to be a function.`)
+  function ＸＸＸrail(assertion, wrongPath, input) {
+    const issues = safeRailInputs({assertion, wrongPath})
+    if (issues.length > 0) {
+      return GuidedLeft(yell(`rail`, issues))
     }
     return (
-      safety(input) ?
+      assertion(input) ?
       GuidedRight :
-      pipe(divider, GuidedLeft)
+      pipe(wrongPath, GuidedLeft)
     )(input)
   }
 )
 
 export const multiRail = curry(
-  function ＸＸＸmultiRail(safety, divider, input) {
+  function ＸＸＸmultiRail(assertion, wrongPath, input) {
     return chain(
-      rail(safety, divider),
+      rail(assertion, wrongPath),
       input
     )
   }
 )
 
-const safeWarn = curry(
-  function ＸＸＸsafeWarn(safety, badPath, goodPath) {
-    if (!isFn(safety)) {
-      return `handrail: Expected safety to be a function.`
-    }
-    if (!isFn(badPath)) {
-      return `handrail: Expected badPath to be a function.`
-    }
-    if (!isFn(goodPath)) {
-      return `handrail: Expected goodPath to be a function.`
-    }
-  }
-)
+const safeWarn = curry((scope, input) => judgeObject(
+  identity,
+  yell(scope),
+  rejectNonFunctions,
+  input
+))
 
-const internalRailSafety = curry(
-  function ＸＸＸinternalRailSafety(safety, badPath, goodPath) {
-    return rail(
-      K(allFunctions([safety, badPath, goodPath])),
-      K(safeWarn(safety, badPath, goodPath))
-    )
-  }
-)
+const internalRailSafety = function ＸＸＸinternalRailSafety(expectations) {
+  return rail(
+    K(allPropsAreFunctions(expectations)),
+    K(safeWarn(`handrail`, expectations))
+  )
+}
 
 export const handrail = curry(
-  function ＸＸＸhandrail(safety, badPath, goodPath, input) {
+  function ＸＸＸhandrail(assertion, wrongPath, rightPath, input) {
     return pipe(
-      internalRailSafety(safety, badPath, goodPath),
-      multiRail(safety, badPath),
-      map(goodPath)
+      // first prove we have good inputs
+      internalRailSafety({assertion, wrongPath, rightPath}),
+      // then use the functions to create a rail
+      multiRail(assertion, wrongPath),
+      // then modify your data if we're on the Right path
+      map(rightPath)
     )(input)
   }
 )
