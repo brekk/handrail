@@ -1,3 +1,5 @@
+import * as _assertions from './assertions'
+
 export {map, chain} from 'ramda'
 
 export * from './handrail'
@@ -7,4 +9,4 @@ export {rail as baluster} from './handrail'
 export {handrail as balustrade} from './handrail'
 export {fold as net} from './util'
 
-export * from './assertions'
+export const assertions = _assertions
