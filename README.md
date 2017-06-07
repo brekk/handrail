@@ -1,17 +1,9 @@
-
-```js
-/* eslint-disable max-len */
-/* eslint-disable no-unused-expression */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
-```
-
 ## handrail
 ### a toolset for adding safety to your functional pipelines
 
 **This module is very much a work-in-progress!**
 
-Please read the [accompanying post](https://codepen.io/brekk/post/3c7f65946d644e17ef37d30a9ba4cd15/visual-function-composition) for more in depth explanation.
+Please read the [accompanying post](https://codepen.io/brekk/post/visual-function-composition) for more in depth explanation.
 
 This utility adds [logical disjunction](https://en.wikipedia.org/wiki/Logical_disjunction) / [railway-oriented programming](https://fsharpforfunandprofit.com/rop) to your functional pipelines.
 
@@ -24,6 +16,10 @@ See the below example problem in a form that runs in node in [./example.js](./ex
 Let's say I have a contrived problem: I want to grab the value `x` from my object, if it exists.
 
 ```js
+/* eslint-disable max-len */
+/* eslint-disable no-unused-expression */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
 const getX = (a) => a.x // equivalent to R.prop(`x`)
 console.log(getX({
   x: `x literal`
@@ -229,6 +225,10 @@ export const basicallyHandrail = R.curry(
     R.map(goodPath)
   )(x)
 )
+/* eslint-enable max-len */
+/* eslint-enable no-unused-expression */
+/* eslint-enable no-unused-vars */
+/* eslint-enable no-console */
 ```
 
 As you can see, if you need, you simply need to add `rail` to your pipeline, and then as long as you're using something like `Ramda.map` (which delegates the `map` method correctly), you can `map` | `ap` | `chain` | `fold` as you need to.
@@ -242,10 +242,3 @@ Wow, `rail` and `handrail` are cool!
 **A**: Use `multiRail`! (For those of you more well-versed in FP, `multiRail = chain(rail(safety, badPath))`)
 
 (Better example forthcoming here.)
-
-```js
-/* eslint-enable max-len */
-/* eslint-enable no-unused-expression */
-/* eslint-enable no-unused-vars */
-/* eslint-enable no-console */
-```
