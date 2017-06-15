@@ -22,7 +22,7 @@ import {
 // we're using the convention of prefixing ＸＸＸ to the main functions so that they aren't
 // anonymous and scan reasonably well
 
-const yell = curry((scope, errors) => (
+const expectFn = curry((scope, errors) => (
   new Error(`${scope}: Expected ${errors.join(`, `)} to be function${plural(errors)}.`)
 ))
 
@@ -38,8 +38,11 @@ const safeRailInputs = function ＸＸＸsafeRailInputs(inputs) {
 export const rail = curry(
   function ＸＸＸrail(assertion, wrongPath, input) {
     const issues = safeRailInputs({assertion, wrongPath})
+    if (input == null) {
+      return GuidedLeft(new Error(`rail: Expected to be given non-null input.`))
+    }
     if (issues.length > 0) {
-      return GuidedLeft(yell(`rail`, issues))
+      return GuidedLeft(expectFn(`rail`, issues))
     }
     return (
       assertion(input) ?
@@ -60,7 +63,7 @@ export const multiRail = curry(
 
 const safeWarn = curry((scope, input) => judgeObject(
   identity,
-  yell(scope),
+  expectFn(scope),
   rejectNonFunctions,
   input
 ))

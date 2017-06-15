@@ -132,6 +132,14 @@ test(`rail / baluster should Leftify a bad input`, (t) => {
     bad
   )
 })
+test.cb(`rail should Leftify a null input`, (t) => {
+  t.plan(1)
+  const bad = rail(K(true), K(`shit`), null)
+  fold((x) => {
+    t.is(x.message, `rail: Expected to be given non-null input.`)
+    t.end()
+  }, t.fail, bad)
+})
 
 test(`rail should fail with a Left when assertion is not a function`, (t) => {
   const badSafety = rail({}, identity, `whatever`)
