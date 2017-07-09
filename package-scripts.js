@@ -102,7 +102,7 @@ module.exports = {
       },
       addAPI: {
         description: `add API docs to the README`,
-        script: `documentation readme README.md -s "API" src/index.js`
+        script: `documentation readme -s "API" src/index.js`
       }
     }
   }
