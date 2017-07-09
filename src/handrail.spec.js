@@ -7,7 +7,8 @@ import {
   assertions,
   rail,
   handrail,
-  fold
+  fold,
+  guideRail
 } from './index'
 const {
   isRight,
@@ -214,6 +215,61 @@ test(`handrail should fail with multiple assertions when there are multiple fail
 test(`handrail should fail with multiple assertions when there are multiple failures: 4`, (t) => {
   const d = handrail({}, {}, identity, `whatever`)
   t.deepEqual(messenger(d), `handrail: Expected assertion, wrongPath to be functions.`)
+})
+
+test(`guideRail should allow for multiple assertions at a single callsite`, (t) => {
+  /*
+  * @method guideRail
+  * @param {functions[]} rails - an array of [assertion, failCase] pairs
+  * @param {function} goodPath - what to do if things go well
+  * @param {*} input - whatever
+  * @returns {GuidedLeft|GuidedRight} - an Either
+  */
+  const rails = [
+    [({age}) => age > 20, ({name}) => `Expected ${name} to be 21.`],
+    [({cash}) => cash - 5 >= 0, ({name}) => `Expected ${name} to have cash.`],
+    [({hair = `black`}) => hair === `black`, ({name}) => `Expected ${name} to have black hair.`]
+  ]
+  const goodPath = (user) => {
+    /* eslint-disable fp/no-mutation */
+    /* eslint-disable fp/no-mutating-methods */
+    user.cash -= 5
+    user.beverages = user.beverages || []
+    user.beverages.push(`beer`)
+    /* eslint-enable fp/no-mutation */
+    /* eslint-enable fp/no-mutating-methods */
+    return user
+  }
+  const alice = {
+    name: `alice`,
+    cash: 5,
+    age: 25
+  }
+  const jimmy = {
+    name: `jimmy`,
+    cash: 10,
+    age: 15
+  }
+  const redHead = {
+    name: `redhead`,
+    cash: 20,
+    age: 40,
+    hair: `red`
+  }
+  const guidedGrab = curry((r, p, i) => pipe(guideRail(r, p), grab)(i))
+  const testCase = guidedGrab(rails, goodPath)
+  const newAlice = testCase(alice)
+  t.deepEqual(newAlice, {
+    name: `alice`,
+    cash: 0,
+    beverages: [`beer`],
+    age: 25
+  })
+  const newAlice2 = testCase(newAlice)
+  t.is(newAlice2, `Expected alice to have cash.`)
+  const newJimmy = testCase(jimmy)
+  t.is(newJimmy, `Expected jimmy to be 21.`)
+  t.is(testCase(redHead), `Expected redhead to have black hair.`)
 })
 
 /* eslint-enable fp/no-unused-expression */

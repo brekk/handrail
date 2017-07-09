@@ -215,3 +215,35 @@ Returns **(GuidedRight | GuidedLeft)** Left / Right -wrapped value
 -   `input` **any** any input
 
 Returns **(GuidedLeft | GuidedRight)** an Either
+
+#### guideRail
+
+**Parameters**
+
+-   `rails` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;functions>** an array of [assertion, failCase] pairs
+-   `goodPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** what to do if things go well
+-   `input` **any** whatever
+
+**Examples**
+
+```javascript
+import pipe from 'ramda/src/pipe'
+import {guideRail, fold} from 'handrail'
+const identity = (x) => x
+const rails = [
+  [({age}) => age > 20, ({name}) => `Expected ${name} to be 21.`],
+  [({cash}) => cash - 5 >= 0, ({name}) => `Expected ${name} to have cash.`],
+]
+const bartender = (user) => {
+  user.cash -= 5
+  user.beverages = user.beverages || []
+  user.beverages.push(`beer`)
+  return user
+}
+const cashAndAgeSafeBartender = pipe(
+  guideRail(rails, bartender),
+  fold(identity, identity)
+)
+```
+
+Returns **(GuidedLeft | GuidedRight)** an Either
