@@ -1,4 +1,4 @@
-![handrail](https://cdn.rawgit.com/brekk/handrail/63f5bd2/logo.svg)
+![handrail](https://cdn.rawgit.com/brekk/handrail/087e71b/logo.svg)
 ### a toolset for adding safety to your functional pipelines
 
 **This module is very much a work-in-progress!**
