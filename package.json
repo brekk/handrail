@@ -59,6 +59,7 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "browserify": "^14.4.0",
+    "documentation": "^4.0.0-rc.1",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-babel": "^4.1.1",
@@ -102,7 +103,10 @@
     "test": "nps test",
     "test.es6": "nps test.es6",
     "test.log": "nps test.log",
-    "cost": "nps cost"
+    "cost": "nps cost",
+    "dependencies": "nps dependencies",
+    "documentation": "nps documentation",
+    "readme": "nps readme"
   },
   "repository": "https://github.com/brekk/handrail.git"
 }

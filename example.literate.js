@@ -1,6 +1,6 @@
 /**
-![handrail](https://cdn.rawgit.com/brekk/handrail/63f5bd2/logo.svg)
-### a toolset for adding safety to your functional pipelines
+![handrail](https://cdn.rawgit.com/brekk/handrail/56db4bd/logo.svg)
+> a toolset for adding safety to your functional pipelines
 
 **This module is very much a work-in-progress!**
 
@@ -10,229 +10,171 @@ This utility adds [logical disjunction](https://en.wikipedia.org/wiki/Logical_di
 
 Largely this utility sits on top of `fantasy-eithers`, which provides the Either functionality we rely upon.
 
-See the below example problem in a form that runs in node in [./example.js](./example.js)
+See this file in a runnable form here: [example.literate.js](https://cdn.rawgit.com/brekk/handrail/56db4bd/example.literate.js)
 
-(_NB_ - The below context assumes some familiarity with functional composition and currying, if you would like to read more, see [this post](https://codepen.io/brekk/post/functional-workaholism))
+Here's a contrived problem that `handrail` can help us solve:
 
-Let's say I have a contrived problem: I want to grab the value `x` from my object, if it exists.
+1. Jimmy and Alice want to go drinking, but Jimmy isn't of legal drinking age.
 */
 
-const getX = (a) => a.x // equivalent to R.prop(`x`)
-console.log(getX({
-  x: `x literal`
-})) // "x literal"
-
-/**
-This is an ok start, but we're expecting an object input, so this function will return undefined if we give it an unexpected input, like a string literal or a number:
-*/
-
-console.log(getX(100)) // undefined
-console.log(getX(`whatever`)) // undefined
-
-/**
-Let's say the scope of our original contrived problem changes, now we want to access a nested value:
-*/
-
-const getX2 = (a) => a.v2.x // equivalent to R.path([`v2`, `x`])
-console.log(getX2({
-  v2: {
-    x: 1000
-  }
-})) // 1000
-
-/**
-As you are probably aware, now we can get errors to throw with bad inputs:
-*/
-
-try {
-  getX2(10000)
-} catch (e) {
-  // console.log(e) // TypeError: Cannot read property 'x' of undefined
-}
-
-/**
-While we're dealing with this problem, it turns out there's a new memo from the powers that be about the contrived problem, and now it has some meat: now we need a function which:
-
-1. can grab the nested `v2.filename` property from a specific list of objects that represent file paths
-2. must let us know if that filename property doesn't exist, _without throwing an error_
-3. must, if the filename property does exist, return a relative version of that filename, given string `relative`
-
-How can we solve this nicely?
-
-To start, let's add Ramda or a similar functional library:
-*/
-
-import R from 'ramda'
-
-/**
-Next, to address the first point and the third point (with some handwaving), we can simply do (apologies for the potential confusion around using both `Ramda.path` and `path`, used an alias for that reason):
-*/
-
-import nodePath from 'path'
-
-const getNestedPath = R.path([`v2`, `filename`])
-const relative = R.curry((a, b) => nodePath.relative(a, b))
-
-// const xtrace = R.curry((l, a, b) => { l(a, b); return b })
-// const trace = xtrace(console.log)
-
-const makeAllRelativePaths = R.curry(
-  (directory, fileList) => R.pipe(
-    // trace(`inputs`),
-    // the cunning ones amongst you know we can collapse these two maps,
-    R.map(
-      getNestedPath
-    ),
-    // but we keep them like this for debugging
-    // trace(`nested pull`),
-    R.map(
-      relative(directory)
-    )
-    // trace(`relativized`)
-  )(fileList)
-)
-
-/**
-Cool. So with good inputs, we can do this:
-*/
-
-const gen = (filename) => ({
-  v2: {
-    filename: filename + `.js`
-  }
+const resetUsers = () => ({
+  alice: {name: `alice`, cash: 15, age: 22},
+  jimmy: {name: `jimmy`, cash: 20, age: 20}
 })
-const files = `ABCDE`.split(``).map(gen) // a simple generated list
-const dir = `./hey/cool/pants/`
-// #1 (See `./example.js`, ⌘+F > #1.)
-makeAllRelativePaths(dir, files) // [`../../../A.js`, ...etc]
+
+let {alice, jimmy} = resetUsers()
 
 /**
-Great! So now what happens if we change our harness to add some stuff we **know** won't work?
+2. There's an unscrupulous bartender (in the form of a function) who doesn't enforce the rules.
 */
 
-const failingFiles = files.concat([420, true, `uhhhhh wait`])
-try {
-  makeAllRelativePaths(dir, failingFiles)
-} catch (e) {
-  // console.log(e) // TypeError: Path must be a string. Received undefined
+const unscrupulousBartender = (user) => {
+  user.cash -= 5
+  user.beverages = user.beverages || []
+  user.beverages.push(`beer`)
+  return user
 }
 
+console.log(`=== example one ===`)
+console.log(`alice goes to the bar`, unscrupulousBartender(alice))
+// {name: `alice`, cash: 10, beverages: [`beer`], age: 22}
+console.log(`jimmy goes to the bar`, unscrupulousBartender(jimmy))
+// {name: `jimmy`, cash: 15, beverages: [`beer`], age: 20}
+
 /**
-Barf-o-rama. 😑
-
-Finally, we get to the point of this README!
-
-#### Using handrail to add safety
-
-We can use *handrail* to solve our problems!
+3. But we're part of a team that's trying to crack down on unscrupulous bartenders, and we'd like to use `handrail` to solve this problem.
 */
-
 // import {handrail} from 'handrail'
+const {handrail} = require(`./index`)
 
-const notObject = (o) => typeof o !== `object`
-const safeMakeRelative = R.curry(
-  (directory, fileList) => handrail(
-    getNestedPath,
-    (x) => `Expected to be given all objects, instead received: ${x.filter(notObject).join(`, `)}`,
-    makeAllRelativePaths(directory),
-    fileList
-  )
+const ageAttentiveBartender = handrail(
+  (user) => user.age > 20,
+  (user) => `Expected ${user.name} - (age: ${user.age}) to be at least 21.`,
+  unscrupulousBartender
 )
 
-// #2 (See `./example.js`, ⌘+F > #2.)
-safeMakeRelative(dir, failingFiles) // {r: `Expected to be given all objects, instead received: 420, true, 'uhhhhh wait'` }
+console.log(`=== example two ===`)
+console.log(`alice goes to the bar behaving legally`, ageAttentiveBartender(alice))
+console.log(`jimmy goes to the bar behaving legally`, ageAttentiveBartender(jimmy))
 
 /**
-#### Return errors instead of literals in the Left path
+Hey, now we're seeing an altered behavior, but why is this object wrapped around our values?
 
-_NB: If you need to deal with an error stack, you can have the second parameter return an Error:_
+This is an `Either`; it's either a Left or a Right. In either case, when we wanna grab a value out of the result, we simply have to use `fold` from 'handrail' to get a resolving value.
 */
 
-const safeMakeRelativeWithStack = R.curry(
-  (directory, fileList) => handrail(
-    getNestedPath,
-    (x) => new Error(`Expected to be given all objects, instead received: ${x.filter(notObject).join(`, `)}`),
-    makeAllRelativePaths(directory),
-    fileList
-  )
+// import {fold} from 'handrail'
+const {fold} = require(`./index`)
+
+/**
+`fold` takes three parameters. The first two are functions, the first is invoked when the value is a Left, and the other is invoked when the value is a Right. Finally, the last parameter is an Either (Left / Right). This is a curried function, so you can specify what to do as a resolution well before you have an Either.
+*/
+
+// here's a simple one
+const logOrWarn = fold(console.error, console.log)
+
+/**
+Now we can tack on this resolution value to our previously-error producing function using `pipe`
+*/
+
+const pipe = require(`ramda/src/pipe`)
+const ageAttentiveBartender2 = pipe(ageAttentiveBartender, logOrWarn)
+
+console.log(`=== example three ===`)
+console.log(`alice goes to the bar behaving legally, round 2`)
+ageAttentiveBartender2(alice)
+/*
+{ name: 'alice',
+  cash: 0,
+  age: 22,
+  beverages: [ 'beer', 'beer', 'beer' ] }
+*/
+console.log(`jimmy goes to the bar behaving legally, round 2`)
+ageAttentiveBartender2(jimmy)
+
+/**
+Oh! Now we've added age-safety to our bar!
+
+However, let's say that we've spotted another issue with our current function -- it doesn't care if the given user doesn't have cash to cover the beer.
+*/
+
+console.log(`=== example four ===`)
+console.log(`alice can go into debt with the bar!`)
+ageAttentiveBartender2(alice)
+/*
+{ name: 'alice',
+  cash: -5,
+  age: 22,
+  beverages: [ 'beer', 'beer', 'beer', 'beer' ] }
+*/
+
+/**
+So, rather than continuing to make Alice more drunk and more in debt, let's call resetUsers:
+*/
+
+let soberUsers = resetUsers()
+alice = soberUsers.alice
+jimmy = soberUsers.jimmy
+
+/**
+And let's see what we can do (relative to our original unscrupulousBartender implementation above) to add both age & cash safety to our function.
+
+We'll use `rail` and `multiRail`, which will allow us to add more than one assertion / form of safety to our original bartending function:
+*/
+
+// import {rail, multiRail} from 'handrail'
+const {rail, multiRail} = require(`./index`)
+
+/**
+(NB: This example leans a little more heavily on an understanding of `pipe`, which is described in more detail [here](https://codepen.io/brekk/post/functional-workaholism#function-composition-7). Simple example: `pipe((x) => x + 5, (y) => y - 7)` is the same as `(z) => z - 2`)
+*/
+
+/* for easier recall:
+const unscrupulousBartender = (user) => {
+  user.cash -= 5
+  user.beverages = user.beverages || []
+  user.beverages.push(`beer`)
+  return user
+}
+*/
+
+// we need map so that we can alter things within the Either value
+const map = require(`ramda/src/map`)
+
+// let's establish our basic expectations
+const usersShouldBe21 = ({age}) => age > 20
+const usersShouldHaveCashToCoverABeer = ({cash}) => cash - 5 >= 0
+
+// and the errors we have
+const warnYoungsters = (user) => `Expected ${user.name} to be 21!`
+const warnWouldBeDebtors = (user) => `Expected ${user.name} to have at least 5 dollars!`
+
+const cashAndAgeSafeBartender = pipe(
+  // add safety for age!
+  rail(usersShouldBe21, warnYoungsters),
+  // add safety for cash!
+  // multiRail is identical to rail, but should only be used when rail is already being used
+  multiRail(usersShouldHaveCashToCoverABeer, warnWouldBeDebtors),
+  // alter the Either value, so wrap our original function in ``
+  map(unscrupulousBartender),
+  // convert our Either value to a string and print it
+  logOrWarn
 )
-// #3 (See `./example.js`, ⌘+F > #3.)
-console.log(`#3.`, safeMakeRelativeWithStack(dir, failingFiles).l.message)
+
+console.log(`=== example five ===`)
+console.log(`jimmy is rejected for being underage:`)
+cashAndAgeSafeBartender(jimmy)
+// Expected jimmy to be 21!
+console.log(`alice buys beer until she is broke:`)
+cashAndAgeSafeBartender(alice)
+// { name: 'alice', cash: 10, age: 22, beverages: [ 'beer' ] }
+cashAndAgeSafeBartender(alice)
+// { name: 'alice', cash: 5, age: 22, beverages: [ 'beer', 'beer' ] }
+cashAndAgeSafeBartender(alice)
+// { name: 'alice', cash: 0, age: 22, beverages: [ 'beer', 'beer', 'beer' ] }
+cashAndAgeSafeBartender(alice)
+// Expected alice to have at least 5 dollars!
 
 /**
-Now we can safely pass in a bad dataset, and it won't fail, it'll just return a string! (Ish.)
-
-#### Get values from an Either
-
-**Q**: So, the output is wrapped in this `{r: value}` structure (or, if something broke, a `{l: value}` structure), how do we get the raw value out?
-
-**A**: Use `fold` / `net`! This allows us to take the existing Either value and return it back to a raw value.
-*/
-
-import {
-  Right,
-  fold, // alias 'net'
-  rail, // alias 'baluster'
-  handrail // alias 'balustrade'
-} from './index'
-// - or -
-// import {net} from 'handrail'
-
-/**
-By folding / netting an Either, we can pull the boxed value out of the Either.
-
-In many cases, this can just be the identity function `(x) => x`:
-*/
-
-const myEither = Right(`my value`)
-const value = fold(R.identity, R.identity, myEither) // my value
-
-/**
-Because `fold` / `net` are curried, however, you can make much more declarative functions, where you express what you want to do with a good / bad value independently of the value itself.
-*/
-
-// I wouldn't recommend alerting, but you _could_ if you wanted.
-const alert = typeof window !== `undefined` ? window.alert : R.identity
-const getEntitiesOrAlert = fold(alert, R.path([`body`, `entities`]))
-
-/**
-However, as the situation warrants, you may well want to hook an Either to a global toast / messaging service or similar:
-*/
-
-const addToast = R.identity
-const valueOrToast = fold(addToast, R.identity)
-
-/**
-Finally, if you want to cleave to the imperative world you may be more familiar with:
-*/
-
-// this is gross, but you could do it
-const throwOrReturn = fold((x) => { throw x }, R.identity)
-
-/**
-#### Adding your own rail
-
-Perhaps you need to make sure that you're more in control of your pipeline than `handrail` affords. `handrail` is basically some syntactic sugar around this notion:
-*/
-
-// import {rail} from 'handrail'
-export const basicallyHandrail = R.curry(
-  (safety, badPath, goodPath, x) => R.pipe(
-    rail(safety, badPath),
-    R.map(goodPath)
-  )(x)
-)
-
-/**
-As you can see, if you need, you simply need to add `rail` to your pipeline, and then as long as you're using something like `Ramda.map` (which delegates the `map` method correctly), you can `map` | `ap` | `chain` | `fold` as you need to.
-
-#### Adding more than one rail
-
-Wow, `rail` and `handrail` are cool!
-
-**Q**: What happens if I have more than one point of failure?
-
-**A**: Use `multiRail`! (For those of you more well-versed in FP, `multiRail = chain(rail(safety, badPath))`)
-
-(Better example forthcoming here.)
-*/
+### API
+ */

@@ -1,4 +1,4 @@
-import {curry, pipe} from 'katsu-curry'
+import {I, curry, curryObjectK, pipe} from 'katsu-curry'
 import length from 'ramda/src/length'
 import allPass from 'ramda/src/allPass'
 import prop from 'ramda/src/prop'
@@ -6,21 +6,40 @@ import reject from 'ramda/src/reject'
 import all from 'ramda/src/all'
 import propSatisfies from 'ramda/src/propSatisfies'
 
-export const judgement = curry(
-  (deliberation, jury, law, accused) => pipe(
-    law,
-    deliberation,
-    jury
-  )(accused)
-)
-
-export const judgeObject = curry(
-  (deliberation, jury, law, accused) => judgement(
-    pipe(deliberation, Object.keys),
+export const judgement = curryObjectK(
+  [`jury`, `law`, `input`],
+  ({
     jury,
     law,
-    accused
-  )
+    input,
+    deliberation = I,
+    pre = I,
+    post = I
+  }) => {
+    return pipe(
+      law,
+      pipe(pre, deliberation, post),
+      jury
+    )(input)
+  }
+)
+
+export const judgeObject = curryObjectK(
+  [`jury`, `law`, `input`],
+  ({
+    jury,
+    law,
+    input,
+    pre = I,
+    post = I
+  }) => judgement({
+    deliberation: Object.keys,
+    pre,
+    post,
+    jury,
+    law,
+    input
+  })
 )
 
 const type = curry(

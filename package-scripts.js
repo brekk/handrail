@@ -49,6 +49,14 @@ module.exports = {
         `cat ./costs`
       )
     },
+    documentation: {
+      description: `generate documentation`,
+      script: `documentation build src/handrail.js -f html -o docs`
+    },
+    depcheck: {
+      description: `check documentation`,
+      script: `depcheck`
+    },
     dist: {
       description: `generate files`,
       script: `nps build`
@@ -63,11 +71,11 @@ module.exports = {
     },
     precommit: {
       description: `the tasks auto-run before commits`,
-      script: allNPS(`dist`, `test`, `cost`, `regenerate.readme`)
+      script: allNPS(`dist`, `test`, `cost`, `regenerate`)
     },
     publish: {
       description: `the tasks to run at publish-time`,
-      script: allNPS(`build`, `regenerate.readme`)
+      script: allNPS(`build`, `regenerate`)
     },
     test: {
       description: `run lint and tests`,
@@ -86,9 +94,15 @@ module.exports = {
       }
     },
     regenerate: {
+      description: `regenerate readme`,
+      script: series(`nps regenerate.readme`, `nps regenerate.addAPI`),
       readme: {
         description: `run ljs2 against example.literate.js to get our README.md file regenerated`,
         script: `ljs2 example.literate.js -o README.md`
+      },
+      addAPI: {
+        description: `add API docs to the README`,
+        script: `documentation readme -s "API" src/index.js`
       }
     }
   }
