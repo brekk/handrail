@@ -1,7 +1,8 @@
-import pipe from 'ramda/src/pipe'
-import K from 'ramda/src/always'
-import curry from 'ramda/src/curry'
-import identity from 'ramda/src/identity'
+// import pipe from 'ramda/src/pipe'
+// import K from 'ramda/src/always'
+// import curry from 'ramda/src/curry'
+// import identity from 'ramda/src/identity'
+import {pipe, K, I as identity, curry} from 'katsu-curry'
 import map from 'ramda/src/map'
 import chain from 'ramda/src/chain'
 
