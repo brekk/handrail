@@ -86,6 +86,7 @@
   "dependencies": {
     "entrust": "^0.0.1",
     "fantasy-eithers": "^0.0.2",
+    "katsu-curry": "^0.0.6",
     "ramda": "^0.24.0"
   },
   "scripts": {

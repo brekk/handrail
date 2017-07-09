@@ -3775,6 +3775,10 @@ katsu-curry@^0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/katsu-curry/-/katsu-curry-0.0.4.tgz#b9a0e15eb8b7f3a082330279be4336a189c513f2"
 
+katsu-curry@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/katsu-curry/-/katsu-curry-0.0.6.tgz#9f29c1ec49e352a4527a4a59146acd394bf6e652"
+
 kebab-case@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/kebab-case/-/kebab-case-1.0.0.tgz#3f9e4990adcad0c686c0e701f7645868f75f91eb"
