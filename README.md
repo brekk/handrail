@@ -139,6 +139,7 @@ const unscrupulousBartender = (user) => {
 }
 */
 
+// we need map so that we can alter things within the Either value
 const map = require(`ramda/src/map`)
 
 // let's establish our basic expectations
@@ -150,9 +151,14 @@ const warnYoungsters = (user) => `Expected ${user.name} to be 21!`
 const warnWouldBeDebtors = (user) => `Expected ${user.name} to have at least 5 dollars!`
 
 const cashAndAgeSafeBartender = pipe(
+  // add safety for age!
   rail(usersShouldBe21, warnYoungsters),
+  // add safety for cash!
+  // multiRail is identical to rail, but should only be used when rail is already being used
   multiRail(usersShouldHaveCashToCoverABeer, warnWouldBeDebtors),
+  // alter the Either value, so wrap our original function in ``
   map(unscrupulousBartender),
+  // convert our Either value to a string and print it
   logOrWarn
 )
 
@@ -188,6 +194,8 @@ Add safety to your pipelines!
 Returns **(GuidedRight | GuidedLeft)** Left / Right -wrapped value
 
 #### multiRail
+
+`multiRail` is nearly-identical to `rail`, but should only be used if `rail` is already in use
 
 **Parameters**
 

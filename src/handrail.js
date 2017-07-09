@@ -68,6 +68,7 @@ export const rail = curry(
 )
 
 /**
+ * `multiRail` is nearly-identical to `rail`, but should only be used if `rail` is already in use
  * @method multiRail
  * @param {function} assertion - boolean-returning function
  * @param {function} wrongPath - function invoked if the inputs are bad
