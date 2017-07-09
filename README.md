@@ -1,12 +1,4 @@
-
-```js
-/* eslint-disable max-len */
-/* eslint-disable no-unused-expression */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
-```
-
-## handrail
+![handrail](https://cdn.rawgit.com/brekk/handrail/xxxxxxxx/logo.svg)
 ### a toolset for adding safety to your functional pipelines
 
 **This module is very much a work-in-progress!**
@@ -242,10 +234,3 @@ Wow, `rail` and `handrail` are cool!
 **A**: Use `multiRail`! (For those of you more well-versed in FP, `multiRail = chain(rail(safety, badPath))`)
 
 (Better example forthcoming here.)
-
-```js
-/* eslint-enable max-len */
-/* eslint-enable no-unused-expression */
-/* eslint-enable no-unused-vars */
-/* eslint-enable no-console */
-```
