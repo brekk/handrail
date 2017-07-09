@@ -1,5 +1,4 @@
-import curry from 'ramda/src/curry'
-import pipe from 'ramda/src/pipe'
+import {curry, pipe} from 'katsu-curry'
 import length from 'ramda/src/length'
 import allPass from 'ramda/src/allPass'
 import prop from 'ramda/src/prop'

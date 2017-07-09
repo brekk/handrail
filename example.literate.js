@@ -1,9 +1,5 @@
-/* eslint-disable max-len */
-/* eslint-disable no-unused-expression */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
 /**
-## handrail
+![handrail](https://cdn.rawgit.com/brekk/handrail/xxxxxxxx/logo.svg)
 ### a toolset for adding safety to your functional pipelines
 
 **This module is very much a work-in-progress!**
@@ -240,7 +236,3 @@ Wow, `rail` and `handrail` are cool!
 
 (Better example forthcoming here.)
 */
-/* eslint-enable max-len */
-/* eslint-enable no-unused-expression */
-/* eslint-enable no-unused-vars */
-/* eslint-enable no-console */

@@ -74,7 +74,7 @@ module.exports = {
       script: allNPS(`lint`, `test.covered`),
       covered: {
         description: `run covered tests`,
-        script: `nyc ava --verbose src/*.spec.js`
+        script: `nyc ava src/*.spec.js`
       },
       log: {
         description: `run tests and save logfile`,
