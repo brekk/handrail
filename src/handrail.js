@@ -1,8 +1,4 @@
-// import pipe from 'ramda/src/pipe'
-// import K from 'ramda/src/always'
-// import curry from 'ramda/src/curry'
-// import identity from 'ramda/src/identity'
-import {pipe, K, I as identity, curry} from 'katsu-curry'
+import {pipe, K, I, curry} from 'katsu-curry'
 import map from 'ramda/src/map'
 import chain from 'ramda/src/chain'
 
@@ -23,25 +19,43 @@ import {
 // we're using the convention of prefixing ＸＸＸ to the main functions so that they aren't
 // anonymous and scan reasonably well
 
+/**
+ * @method expectFn
+ * @param {string} scope - string that gives scope to the error
+ * @param {string[]} errors - a list of error(s)
+ * @returns {Error} an error
+ * @private
+ */
 const expectFn = curry((scope, errors) => (
   new Error(`${scope}: Expected ${errors.join(`, `)} to be function${plural(errors)}.`)
 ))
 
-const safeRailInputs = function ＸＸＸsafeRailInputs(inputs) {
-  // unmetExpectations
-  return pipe(
-    rejectNonFunctions,
-    Object.keys
-  )(inputs)
-}
+/**
+ * @method safeRailInputs
+ * @param {object} inputs - an object of inputs
+ * @return {string[]} array of strings
+ * @private
+ */
+const safeRailInputs = pipe(
+  rejectNonFunctions,
+  Object.keys
+)
 
-// add safety to your pipes!
+/**
+ * Add safety to your pipelines!
+ * @method rail
+ * @param {function} assertion - boolean-returning function
+ * @param {function} wrongPath - function invoked if the inputs are bad
+ * @param {*} input - any input
+ * @returns {GuidedRight|GuidedLeft} Left / Right -wrapped value
+ * @public
+ */
 export const rail = curry(
   function ＸＸＸrail(assertion, wrongPath, input) {
-    const issues = safeRailInputs({assertion, wrongPath})
     if (input == null) {
       return GuidedLeft(new Error(`rail: Expected to be given non-null input.`))
     }
+    const issues = safeRailInputs({assertion, wrongPath})
     if (issues.length > 0) {
       return GuidedLeft(expectFn(`rail`, issues))
     }
@@ -53,6 +67,14 @@ export const rail = curry(
   }
 )
 
+/**
+ * @method multiRail
+ * @param {function} assertion - boolean-returning function
+ * @param {function} wrongPath - function invoked if the inputs are bad
+ * @param {*} input - any input
+ * @returns {GuidedRight|GuidedLeft} Left / Right -wrapped value
+ * @public
+ */
 export const multiRail = curry(
   function ＸＸＸmultiRail(assertion, wrongPath, input) {
     return chain(
@@ -62,12 +84,17 @@ export const multiRail = curry(
   }
 )
 
-const safeWarn = curry((scope, input) => judgeObject(
-  identity,
-  expectFn(scope),
-  rejectNonFunctions,
+/**
+ * @method safeWarn
+ * @param {string} scope - scope input for potential warning
+ * @param {*} input - a
+ */
+const safeWarn = curry((scope, input) => judgeObject({
+  deliberation: I,
+  jury: expectFn(scope),
+  law: rejectNonFunctions,
   input
-))
+}))
 
 const internalRailSafety = function ＸＸＸinternalRailSafety(expectations) {
   return rail(
