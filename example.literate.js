@@ -235,4 +235,6 @@ Wow, `rail` and `handrail` are cool!
 **A**: Use `multiRail`! (For those of you more well-versed in FP, `multiRail = chain(rail(safety, badPath))`)
 
 (Better example forthcoming here.)
+
+### API
 */

@@ -102,7 +102,10 @@
     "test": "nps test",
     "test.es6": "nps test.es6",
     "test.log": "nps test.log",
-    "cost": "nps cost"
+    "cost": "nps cost",
+    "dependencies": "nps dependencies",
+    "documentation": "nps documentation",
+    "readme": "nps readme"
   },
   "repository": "https://github.com/brekk/handrail.git"
 }
