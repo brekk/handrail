@@ -204,5 +204,6 @@ Returns **(GuidedRight | GuidedLeft)** Left / Right -wrapped value
 -   `assertion` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** a function to test the input with
 -   `wrongPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** a function to prepare data before it passes into the Left path
 -   `rightPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** a function to modify after it passes into the Right path
+-   `input` **any** any input
 
-Returns **any** whatever your rightPath does
+Returns **(GuidedLeft | GuidedRight)** an Either

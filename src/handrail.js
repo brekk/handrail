@@ -87,7 +87,7 @@ export const multiRail = curry(
 /**
  * @method safeWarn
  * @param {string} scope - scope input for potential warning
- * @param {*} input - a
+ * @param {*} input - anything
  * @returns {*} any
  * @private
  */
@@ -101,8 +101,8 @@ const safeWarn = curry((scope, input) => judgeObject({
 /**
  * @method internalRailSafety
  * @param {string} scope - scope input for potential warning
- * @param {*} input - a
- * @returns {*} any
+ * @param {*} input - an object wwith `assertion`, `wrongPath`, and `rightPath` keys on it.
+ * @returns {GuidedLeft|GuidedRight} an Either
  * @private
  */
 const internalRailSafety = curryObjectK(
@@ -117,7 +117,8 @@ const internalRailSafety = curryObjectK(
  * @param {function} assertion - a function to test the input with
  * @param {function} wrongPath - a function to prepare data before it passes into the Left path
  * @param {function} rightPath - a function to modify after it passes into the Right path
- * @returns {*} whatever your rightPath does
+ * @param {*} input - any input
+ * @returns {GuidedLeft|GuidedRight} an Either
  * @public
  */
 export const handrail = curry(
