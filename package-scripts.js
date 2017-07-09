@@ -51,7 +51,7 @@ module.exports = {
     },
     documentation: {
       description: `generate documentation`,
-      script: `documentation build src/** -f html -o docs`
+      script: `documentation build src/handrail.js -f html -o docs`
     },
     depcheck: {
       description: `check documentation`,

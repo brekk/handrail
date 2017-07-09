@@ -10,7 +10,9 @@ This utility adds [logical disjunction](https://en.wikipedia.org/wiki/Logical_di
 
 Largely this utility sits on top of `fantasy-eithers`, which provides the Either functionality we rely upon.
 
-See the below example problem in a form that runs in node in [./example.js](./example.js)
+### API
+
+See the below example problem in a form that runs in node in [./example.literate.js](./example.literate.js)
 
 (_NB_ - The below context assumes some familiarity with functional composition and currying, if you would like to read more, see [this post](https://codepen.io/brekk/post/functional-workaholism))
 
@@ -235,6 +237,4 @@ Wow, `rail` and `handrail` are cool!
 **A**: Use `multiRail`! (For those of you more well-versed in FP, `multiRail = chain(rail(safety, badPath))`)
 
 (Better example forthcoming here.)
-
-### API
 */

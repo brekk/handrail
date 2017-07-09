@@ -32,7 +32,7 @@ const expectFn = curry((scope, errors) => (
 
 /**
  * @method safeRailInputs
- * @param {object} inputs - an object of inputs
+ * @param {Object} inputs - an object of inputs
  * @return {string[]} array of strings
  * @private
  */
@@ -118,6 +118,7 @@ const internalRailSafety = curryObjectK(
  * @param {function} wrongPath - a function to prepare data before it passes into the Left path
  * @param {function} rightPath - a function to modify after it passes into the Right path
  * @returns {*} whatever your rightPath does
+ * @public
  */
 export const handrail = curry(
   function ＸＸＸhandrail(assertion, wrongPath, rightPath, input) {
