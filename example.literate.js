@@ -1,5 +1,5 @@
 /**
-![handrail](https://cdn.rawgit.com/brekk/handrail/63f5bd2/logo.svg)
+![handrail](https://cdn.rawgit.com/brekk/handrail/56db4bd/logo.svg)
 ### a toolset for adding safety to your functional pipelines
 
 **This module is very much a work-in-progress!**
@@ -9,8 +9,6 @@ Please read the [accompanying post](https://codepen.io/brekk/post/3c7f65946d644e
 This utility adds [logical disjunction](https://en.wikipedia.org/wiki/Logical_disjunction) / [railway-oriented programming](https://fsharpforfunandprofit.com/rop) to your functional pipelines.
 
 Largely this utility sits on top of `fantasy-eithers`, which provides the Either functionality we rely upon.
-
-### API
 
 See the below example problem in a form that runs in node in [./example.literate.js](./example.literate.js)
 
@@ -237,4 +235,6 @@ Wow, `rail` and `handrail` are cool!
 **A**: Use `multiRail`! (For those of you more well-versed in FP, `multiRail = chain(rail(safety, badPath))`)
 
 (Better example forthcoming here.)
+
+### API
 */
