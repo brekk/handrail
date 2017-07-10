@@ -43,7 +43,7 @@ console.log(`jimmy goes to the bar`, unscrupulousBartender(jimmy))
 3.  But we're part of a team that's trying to crack down on unscrupulous bartenders, and we'd like to use `handrail` to solve this problem.
 
 ```js
-// import {handrail} from 'handrail'
+// import {handrail} from "handrail"
 const {handrail} = require(`./index`)
 
 const ageAttentiveBartender = handrail(
@@ -177,7 +177,7 @@ cashAndAgeSafeBartender(alice)
 // Expected alice to have at least 5 dollars!
 ```
 
-Finally, to round it out, you can use \`guideRail to automate the above process:
+Finally, to round it out, you can use `guideRail` to automate the above process:
 
 ```js
 const {guideRail} = require(`./index`)
