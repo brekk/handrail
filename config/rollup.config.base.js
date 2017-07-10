@@ -1,6 +1,7 @@
 const progress = require(`rollup-plugin-progress`)
+const babili = require(`rollup-plugin-babili`)
 const commonjs = require(`rollup-plugin-commonjs`)
-// const shebang = require(`rollup-plugin-shebang`)
+const cleanup = require(`rollup-plugin-cleanup`)
 const resolve = require(`rollup-plugin-node-resolve`)
 const buble = require(`rollup-plugin-buble`)
 const json = require(`rollup-plugin-json`)
@@ -37,13 +38,17 @@ module.exports = {
         'node_modules/fantasy-eithers/index.js': [ `E` ]
       }
     }),
+    buble(),
     resolve({
       jsnext: true,
       main: true
     }),
     json(),
-    buble()
-    // shebang()
-  ],
-  sourceMap: true
+    cleanup({
+      comments: `none`
+    }),
+    babili({
+      // removeConsole: true
+    })
+  ]
 }
