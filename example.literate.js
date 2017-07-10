@@ -2,8 +2,6 @@
 ![handrail](https://cdn.rawgit.com/brekk/handrail/56db4bd/logo.svg)
 > a toolset for adding safety to your functional pipelines
 
-**This module is very much a work-in-progress!**
-
 Please read the [accompanying post](https://codepen.io/brekk/post/3c7f65946d644e17ef37d30a9ba4cd15/visual-function-composition) for more in depth explanation.
 
 This utility adds [logical disjunction](https://en.wikipedia.org/wiki/Logical_disjunction) / [railway-oriented programming](https://fsharpforfunandprofit.com/rop) to your functional pipelines.
@@ -44,6 +42,7 @@ console.log(`jimmy goes to the bar`, unscrupulousBartender(jimmy))
 /**
 3. But we're part of a team that's trying to crack down on unscrupulous bartenders, and we'd like to use `handrail` to solve this problem.
 */
+
 // import {handrail} from 'handrail'
 const {handrail} = require(`./index`)
 
@@ -155,7 +154,7 @@ const cashAndAgeSafeBartender = pipe(
   // add safety for cash!
   // multiRail is identical to rail, but should only be used when rail is already being used
   multiRail(usersShouldHaveCashToCoverABeer, warnWouldBeDebtors),
-  // alter the Either value, so wrap our original function in ``
+  // alter the Either value, so wrap our original function in `map`
   map(unscrupulousBartender),
   // convert our Either value to a string and print it
   logOrWarn
@@ -174,6 +173,24 @@ cashAndAgeSafeBartender(alice)
 // { name: 'alice', cash: 0, age: 22, beverages: [ 'beer', 'beer', 'beer' ] }
 cashAndAgeSafeBartender(alice)
 // Expected alice to have at least 5 dollars!
+
+/**
+Finally, to round it out, you can use `guideRail to automate the above process:
+*/
+
+const {guideRail} = require(`./index`)
+
+const cashAndAgeSafeBartender2 = guideRail(
+  [
+    // add safety for age!
+    [usersShouldBe21, warnYoungsters],
+    // add safety for cash!
+    [usersShouldHaveCashToCoverABeer, warnWouldBeDebtors]
+    // add more!
+  ],
+  // alter the Either value
+  unscrupulousBartender
+)
 
 /**
 ### API
