@@ -54,10 +54,12 @@ const ageAttentiveBartender = handrail(
 
 console.log(`=== example two ===`)
 console.log(`alice goes to the bar behaving legally`, ageAttentiveBartender(alice))
+// { r: { name: 'alice', cash: 5, age: 22, beverages: [ 'beer', 'beer' ] } }
 console.log(`jimmy goes to the bar behaving legally`, ageAttentiveBartender(jimmy))
+// { l: 'Expected jimmy - (age: 20) to be at least 21.' }
 ```
 
-Hey, now we're seeing an altered behavior, but why is this object wrapped around our values?
+Hey, now we're seeing an altered behavior, but why is this `{r/l}` object wrapped around our values?
 
 This is an `Either`; it's either a Left or a Right. In either case, when we wanna grab a value out of the result, we simply have to use `fold` from 'handrail' to get a resolving value.
 
@@ -263,3 +265,23 @@ const cashAndAgeSafeBartender = pipe(
 ```
 
 Returns **(GuidedLeft | GuidedRight)** an Either
+
+#### bimap
+
+**Parameters**
+
+-   `leftPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** do something if function receives a Left
+-   `rightPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** do something if function receives a Right
+-   `either` **Either** either a Left or a Right
+
+Returns **Either** the original Either, mapped over, but like, with handed-ness
+
+#### fold
+
+**Parameters**
+
+-   `leftPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** do something if function receives a Left
+-   `rightPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** do something if function receives a Right
+-   `either` **Either** either a Left or a Right
+
+Returns **any** the value from within an Either, pulled out of the monadic box
