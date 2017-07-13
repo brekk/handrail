@@ -1,1 +1,1 @@
-module.exports = require(`./lib/handrail`)
+module.exports = require(`./lib/index`)
