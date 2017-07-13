@@ -87,9 +87,9 @@
     "uglify-js": "^3.0.15"
   },
   "dependencies": {
-    "entrust": "^0.0.1",
+    "entrust": "^0.0.3",
     "fantasy-eithers": "^0.0.2",
-    "katsu-curry": "^0.0.6",
+    "katsu-curry": "^0.0.7",
     "ramda": "^0.24.0"
   },
   "scripts": {
