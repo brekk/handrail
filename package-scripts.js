@@ -20,11 +20,11 @@ module.exports = {
   scripts: {
     build: {
       description: `do a per file conversion from /src to /lib`,
-      script: `nps build.rollup`,
-      // script: allNPS(
-        // `build.babel`,
-        // `build.rollup`
-      // ),
+      // script: `nps build.rollup`,
+      script: allNPS(
+        `build.babel`,
+        `build.rollup`
+      ),
       babel: {
         description: `convert files`,
         script: `babel src -d lib --ignore *.spec.js`
