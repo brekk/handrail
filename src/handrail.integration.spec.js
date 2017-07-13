@@ -11,6 +11,31 @@ const {
 const YAHH = `examples -`
 
 /* eslint-disable fp/no-unused-expression */
+test(`published src should have access to all keys`, (t) => {
+  t.deepEqual(
+    Object.keys(Ｘ).sort(), // eslint-disable-line fp/no-mutating-methods
+    [
+      `GuidedLeft`,
+      `GuidedRight`,
+      `Left`,
+      `Right`,
+      `ap`,
+      `assertions`,
+      `baluster`,
+      `balustrade`,
+      `bimap`,
+      `chain`,
+      `fold`,
+      `guideRail`,
+      `guided`,
+      `handrail`,
+      `map`,
+      `multiRail`,
+      `net`,
+      `plural`,
+      `rail`
+    ])
+})
 
 test(`${YAHH} JSON.parse`, (t) => {
   t.plan(5)

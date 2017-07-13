@@ -20,26 +20,27 @@ module.exports = {
   scripts: {
     build: {
       description: `do a per file conversion from /src to /lib`,
-      files: {
+      script: `nps build.rollup`,
+      // script: allNPS(
+        // `build.babel`,
+        // `build.rollup`
+      // ),
+      babel: {
         description: `convert files`,
         script: `babel src -d lib --ignore *.spec.js`
       },
-      script: allNPS(
-        `build.files`,
-        `buildWithRollup`
-      )
-    },
-    buildWithRollup: {
-      description: `generate executable`,
-      script: series(
-        `rollup -c config/commonjs.js`,
-        mkdirp(`dist`),
-        `browserify --node -s handrail ./lib/index.js > ${MINIFIED_BROWSER}`,
-        `uglifyjs --compress --mangle -o ${MINIFIED} -- ./lib/index.js`,
-        `uglifyjs --compress --mangle -o ${MINIFIED_BROWSER} -- ${MINIFIED_BROWSER}`,
-        prepend(`/* handrail v.${version} */`, MINIFIED),
-        prepend(`/* handrail v.${version} */`, MINIFIED_BROWSER)
-      )
+      rollup: {
+        description: `generate with rollup`,
+        script: series(
+          `rollup -c config/commonjs.js`,
+          mkdirp(`dist`),
+          `browserify --node -s handrail ./lib/index.js > ${MINIFIED_BROWSER}`,
+          `uglifyjs --compress --mangle -o ${MINIFIED} -- ./lib/index.js`,
+          `uglifyjs --compress --mangle -o ${MINIFIED_BROWSER} -- ${MINIFIED_BROWSER}`,
+          prepend(`/* handrail v.${version} */`, MINIFIED),
+          prepend(`/* handrail v.${version} */`, MINIFIED_BROWSER)
+        )
+      }
     },
     cost: {
       description: `regenerate the costfile`,
