@@ -1,1 +1,1 @@
-module.exports = require(`./dist/handrail`)
+module.exports = require(`./dist/handrail.min`)
