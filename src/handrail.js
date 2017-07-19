@@ -1,8 +1,12 @@
 import {pipe, K, I, curry, curryObjectK} from 'katsu-curry'
 import map from 'ramda/src/map'
+// import mapF from 'fast.js/map'
+// import {trace} from 'xtrace'
 
 import {rail} from './rail'
 import {multiRail} from './multirail'
+// import {Right} from './either/guided-right'
+// import {isEither} from './either/assert'
 import {
   judgeObject,
   // allFunctions,
@@ -60,3 +64,22 @@ export const handrail = curry(
     )(input)
   }
 )
+
+/*
+export const handrail2 = curry(
+  function ＸＸＸhandrail2(assertion, wrongPath, rightPath, input) {
+    return pipe(
+      trace(`input!`),
+      // first prove we have good inputs
+      internalRailSafety({assertion, wrongPath, rightPath}),
+      trace(`safe?`),
+      // then use the functions to create a rail
+      multiRail(assertion, wrongPath),
+      trace(`multiRailed?`),
+      // then modify your data if we're on the Right path
+      MAP(rightPath)
+      , trace(`MAPPPPPPPPED`)
+    )(input)
+  }
+)
+*/

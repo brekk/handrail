@@ -1,9 +1,7 @@
 import test from 'ava'
-import {prop, always as K, curry, pipe, add, identity} from 'ramda'
-import {
-  isRight,
-  isLeft
-} from './either/assert'
+import {random} from 'f-utility'
+import {prop, always as K, curry, pipe, identity} from 'ramda'
+import {isEither} from './either/assert'
 import {
   Right,
   Left,
@@ -14,41 +12,27 @@ import {
   guideRail
 } from './index'
 
+// these implementations are daggy / fantasy-eithers specific
+const isRight = (x) => isEither(x) && x.r
+const isLeft = (x) => isEither(x) && x.l
+// folktale/result
+// import {Ok as Right, Error as Left} from 'folktale/result'
+// export const isRight = (x) => isEither(x) && x instanceof Right
+// export const isLeft = (x) => isEither(x) && x instanceof Left
+
 const grab = fold(identity, identity)
 const messenger = pipe(grab, prop(`message`))
 
-const random = (
-  () => {
-    const lower = (char) => char.toLowerCase()
-    const randomSort = () => (0.5 - Math.random())
-    const alphabet = `ABCDEFGHIJKLMNOPQRSTUVWXYZ`.split(``)
-    /* eslint-disable fp/no-mutating-methods */
-    const string = curry(
-      (input, length) => input.concat(
-        input.map(lower)
-      ).sort(
-        randomSort
-      ).slice(0, length).join(``)
-    )
-    /* eslint-enable fp/no-mutating-methods */
-    const number = (x) => Math.random() * x
-    const floor = pipe(number, Math.floor)
-    const floorMin = curry((y, x) => pipe(floor, add(y))(x))
-    const keyValue = (l) => ([string(alphabet, l), floorMin(1, l)])
-    return {
-      floor,
-      floorMin,
-      number,
-      string,
-      alphaString: string(alphabet),
-      keyValue
-    }
-  }
-)()
+/* eslint-disable fp/no-mutation */
+random.keyValue = (x = 10) => (
+  [random.word(x), random.floorMin(0, x)]
+)
+/* eslint-enable fp/no-mutation */
+
 /* eslint-disable fp/no-unused-expression */
 
 test(`GuidedRight should behave like Right given non-Either inputs`, (t) => {
-  const input = random.alphaString(10)
+  const input = random.word(10)
   const r = Right(input)
   const r2 = GuidedRight(input)
   t.deepEqual(r, r2)
@@ -59,7 +43,7 @@ test(`GuidedRight should behave like Right given non-Either inputs`, (t) => {
 })
 
 test(`GuidedRight should respect Left inputs`, (t) => {
-  const input = random.alphaString(10)
+  const input = random.word(10)
   const inner = Left(input)
   const r = Right(inner)
   const r2 = GuidedRight(inner)
@@ -71,8 +55,10 @@ test(`GuidedRight should respect Left inputs`, (t) => {
   t.deepEqual(r.r.l, r2.l)
 })
 
+const expectedKeys = [`r`]
+
 test(`GuidedRight should respect Right inputs`, (t) => {
-  const input = random.alphaString(10)
+  const input = random.word(10)
   const inner = Right(input)
   const r = Right(inner)
   const r2 = GuidedRight(inner)
@@ -81,9 +67,9 @@ test(`GuidedRight should respect Right inputs`, (t) => {
   t.falsy(isLeft(r))
   t.falsy(isLeft(r2))
   t.notDeepEqual(r, r2)
-  t.deepEqual(Object.keys(r), [`r`])
+  t.deepEqual(Object.keys(r), expectedKeys)
   t.is(typeof r.r, `object`)
-  t.deepEqual(Object.keys(r2), [`r`])
+  t.deepEqual(Object.keys(r2), expectedKeys)
   t.is(typeof r2.r, `string`)
   t.deepEqual(r.r.r, r2.r)
 })
@@ -92,7 +78,7 @@ test(`rail / baluster should Rightify a good input`, (t) => {
   t.plan(3)
   const input = random.keyValue(5)
   const [k, v] = input
-  const assertion = pipe(prop(k), (x) => !!x)
+  const assertion = (x) => !!x[k]
   const rationale = K(`this function won't ever do anything`)
   const inputObject = {
     [k]: v,
@@ -115,7 +101,7 @@ test(`rail / baluster should Leftify a bad input`, (t) => {
   const input = random.keyValue(5)
   const [k, v] = input
   const assertion = pipe(prop(`yyy`), (x) => !!x)
-  const pseudo = random.alphaString(10)
+  const pseudo = random.word(10)
   const errorString = `Random error: ${pseudo}`
   const rationale = K(errorString)
   const inputObject = {
@@ -154,11 +140,11 @@ test(`rail should fail with a Left when assertion and wrongPath are not function
   t.is(messenger(dumbInputs), `rail: Expected assertion, wrongPath to be functions.`)
 })
 
-test(`handrail should allow for adding simple rails to a given function`, (t) => {
+const testIt = curry((fn, t) => {
   t.plan(2)
   const input = random.keyValue(5)
   const [k, v] = input
-  const assertion = pipe(prop(`yyy`), Boolean)
+  const assertion = (x) => (x && x.yyy)
   const myFunction = (x) => {
     x.yyy += 1000 // eslint-disable-line fp/no-mutation
     return x
@@ -172,20 +158,25 @@ test(`handrail should allow for adding simple rails to a given function`, (t) =>
     yyy: random.floorMin(1, 1e3)
   }
   const badObject = {
-    ugh: `crapdammit ` + random.alphaString(4)
+    ugh: `crapdammit ` + random.word(4)
   }
-  const safeFunction = handrail(assertion, (x) => ({
+  const safeFunction = fn(assertion, (x) => ({
     ...badObject,
     ...x
   }), myFunction)
-  const bad = safeFunction(input1)
-  const good = safeFunction(input2)
-  t.deepEqual(bad, Left({
+  const good = pipe(safeFunction, grab)(input2)
+  // console.log(`good`, good)
+  t.deepEqual(good, input2)
+  const bad = pipe(safeFunction, grab)(input1)
+  // console.log(`bad`, bad)
+  t.deepEqual(bad, {
     ...badObject,
     ...input1
-  }))
-  t.deepEqual(good, Right(input2))
+  })
 })
+
+test(`handrail should allow for adding simple rails to a given function`, testIt(handrail))
+// test(`handrail2 should allow for adding simple rails to a given function`, testIt(handrail2))
 
 test(`handrail should fail if assertion is not a function`, (t) => {
   const x = handrail({}, identity, identity, `whatever`)
