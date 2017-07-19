@@ -1,19 +1,18 @@
 import test from 'ava'
 import {prop, always as K, curry, pipe, add, identity} from 'ramda'
 import {
+  isRight,
+  isLeft
+} from './either/assert'
+import {
   Right,
   Left,
   GuidedRight,
-  assertions,
   rail,
   handrail,
   fold,
   guideRail
 } from './index'
-const {
-  isRight,
-  isLeft
-} = assertions
 
 const grab = fold(identity, identity)
 const messenger = pipe(grab, prop(`message`))

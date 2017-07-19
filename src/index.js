@@ -1,12 +1,24 @@
-import * as _assertions from './assertions'
+import _chain from 'ramda/src/chain'
+import _map from 'ramda/src/map'
+import assert from './either/assert'
 
-export {map, chain} from 'ramda'
+export const map = _map
+export const chain = _chain
 
 export * from './handrail'
-export * from './util'
-// Extended metaphor API
-export {rail as baluster} from './handrail'
-export {handrail as balustrade} from './handrail'
-export {fold as net} from './util'
+export * from './rail'
+export * from './multirail'
+export * from './guiderail'
+export * from './either/ap'
+export * from './either/bimap'
+export * from './either/fold'
+export * from './either/guided'
+export * from './either/guided-left'
+export * from './either/guided-right'
 
-export const assertions = _assertions
+export const assertions = assert
+
+// Extended metaphor API
+export {rail as baluster} from './rail'
+export {handrail as balustrade} from './handrail'
+export {fold as net} from './either/fold'

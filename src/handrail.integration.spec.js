@@ -32,7 +32,6 @@ test(`published src should have access to all keys`, (t) => {
       `map`,
       `multiRail`,
       `net`,
-      `plural`,
       `rail`
     ])
 })

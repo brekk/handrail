@@ -1,0 +1,28 @@
+{
+  "showFileExtension": true,
+  "fontSize": "12px",
+  "fontName": "Fira Code",
+  "backgroundColor": "#eeeeff",
+  "nodeColor": "#242424",
+  "includeNpm": true,
+  "noDependencyColor": "#0c821d",
+  "cyclicNodeColor": "#cc0000",
+  "edgeColor": "#242424",
+  "graphVizOptions": {
+    "G": {
+      "ranksep": 1.1,
+      "size": "80 40",
+      "overlap": false,
+      "packmode": "node"
+    },
+    "E": {
+      "weight": 20
+    },
+    "N": {
+      "regular": true,
+      "shape": "polygon",
+      "sides": 4,
+      "penwidth": 4
+    }
+  }
+}

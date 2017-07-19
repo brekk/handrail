@@ -45,7 +45,7 @@ module.exports = {
     cost: {
       description: `regenerate the costfile`,
       script: series(
-        createWithText(`binoculars cost`, COSTFILE),
+        createWithText(`handrail cost`, COSTFILE),
         append(`\`cost-of-modules --no-install --yarn\``, COSTFILE),
         `cat ./costs`
       )
