@@ -1,5 +1,5 @@
+import {_map} from 'f-utility'
 import _chain from 'ramda/src/chain'
-import _map from 'ramda/src/map'
 import assert from './either/assert'
 
 export const map = _map

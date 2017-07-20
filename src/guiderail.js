@@ -1,5 +1,4 @@
-import {pipe, curry} from 'f-utility'
-import map from 'ramda/src/map'
+import {map, pipe, curry} from 'f-utility'
 import {rail} from './rail'
 import {multiRail} from './multirail'
 

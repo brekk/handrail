@@ -1,7 +1,4 @@
-import {pipe, K, I, curry, curryObjectK} from 'katsu-curry'
-import map from 'ramda/src/map'
-// import mapF from 'fast.js/map'
-// import {trace} from 'xtrace'
+import {map, pipe, K, I, curry, curryObjectK} from 'f-utility'
 
 import {rail} from './rail'
 import {multiRail} from './multirail'

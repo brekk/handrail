@@ -2103,7 +2103,7 @@ d@1:
   dependencies:
     es5-ext "^0.10.9"
 
-daggy@0.0.1:
+daggy@0.0.1, daggy@0.0.x:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/daggy/-/daggy-0.0.1.tgz#ae9c932c9f7136e655a04afb21e8baadfd0d3707"
 
@@ -2784,15 +2784,16 @@ f-utility@^1.0.2:
     folktale "^1.0.0-SNAPSHOT"
     lodash "^4.15.0"
 
-f-utility@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/f-utility/-/f-utility-3.0.1.tgz#c5a2bf58be8d28dd5a8b081d0815d61eb64adf68"
+f-utility@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/f-utility/-/f-utility-3.0.2.tgz#4fa39f42dd53e02c1d32f64d8c58c1b2c32f934b"
   dependencies:
     entrust "^0.0.2"
+    fantasy-land "^3.3.0"
     fast.js "^0.1.1"
     katsu-curry "^0.0.8"
 
-fantasy-combinators@0.0.1:
+fantasy-combinators@0.0.1, fantasy-combinators@0.0.x:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/fantasy-combinators/-/fantasy-combinators-0.0.1.tgz#d18388aed94be790ac4069031f5ea018345e33a1"
 
@@ -2802,6 +2803,13 @@ fantasy-eithers@^0.0.2:
   dependencies:
     daggy "0.0.1"
     fantasy-combinators "0.0.1"
+
+fantasy-land@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/fantasy-land/-/fantasy-land-3.3.0.tgz#04a435f255a5c373dd2828e7a8165c03e8c1cde0"
+  dependencies:
+    daggy "0.0.x"
+    fantasy-combinators "0.0.x"
 
 fast-levenshtein@~2.0.4:
   version "2.0.6"
