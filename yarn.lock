@@ -2784,9 +2784,9 @@ f-utility@^1.0.2:
     folktale "^1.0.0-SNAPSHOT"
     lodash "^4.15.0"
 
-f-utility@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/f-utility/-/f-utility-3.0.2.tgz#4fa39f42dd53e02c1d32f64d8c58c1b2c32f934b"
+f-utility@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/f-utility/-/f-utility-3.0.3.tgz#7846ed3f89d6f10c5f9a36f09a5f5702fbda3ddf"
   dependencies:
     entrust "^0.0.2"
     fantasy-land "^3.3.0"
