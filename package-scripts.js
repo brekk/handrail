@@ -16,6 +16,16 @@ const {
 const COSTFILE = `./costs`
 const MINIFIED = `./dist/handrail.min.js`
 const MINIFIED_BROWSER = `./dist/handrail.browser.min.js`
+
+const filterSpecs = [
+  `jayin "_.toPairs(x)`,
+  `.map(([k, v]) => ([k,`,
+  `_.map(v, (y) => y.indexOf('node_modules') > -1 ? y.substr(y.indexOf('node_modules') + 13) : y)`,
+  `]))`,
+  `.filter(([k, v]) => !(k.indexOf('spec') > -1))`,
+  `.reduce((agg, [k, v]) => Object.assign({}, agg, {[k]: v}), {})"`
+].join(``)
+
 module.exports = {
   scripts: {
     build: {
@@ -54,9 +64,19 @@ module.exports = {
       description: `generate documentation`,
       script: `documentation build src/handrail.js -f html -o docs`
     },
-    depcheck: {
-      description: `check documentation`,
-      script: `depcheck`
+    dependencies: {
+      check: {
+        script: `depcheck`,
+        description: `check dependencies`
+      },
+      graph: {
+        script: `madge src --image dependencies.svg`,
+        description: `generate a visual dependency graph`
+      },
+      graph2: {
+        script: `madge src --json | ${filterSpecs} | madge --stdin --image dependencies.svg`,
+        description: `generate a visual dependency graph`
+      }
     },
     dist: {
       description: `generate files`,
