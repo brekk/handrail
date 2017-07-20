@@ -84,12 +84,14 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-post-replace": "^1.0.0",
     "rollup-plugin-progress": "^0.2.1",
-    "uglify-js": "^3.0.15"
+    "uglify-js": "^3.0.15",
+    "xtrace": "^0.0.8"
   },
   "dependencies": {
     "entrust": "^0.0.3",
+    "f-utility": "^3.0.3",
     "fantasy-eithers": "^0.0.2",
-    "katsu-curry": "^0.0.7",
+    "katsu-curry": "^0.0.8",
     "ramda": "^0.24.0"
   },
   "scripts": {

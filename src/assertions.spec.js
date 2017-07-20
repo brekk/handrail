@@ -1,5 +1,5 @@
 import test from 'ava'
-import map from 'ramda/src/map'
+import {map} from 'f-utility'
 import {e0} from 'entrust'
 import {
   judgement,
