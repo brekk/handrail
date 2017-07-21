@@ -11,7 +11,6 @@
   "graphVizOptions": {
     "G": {
       "ranksep": 1.1,
-      "size": "80 40",
       "overlap": false,
       "packmode": "node"
     },

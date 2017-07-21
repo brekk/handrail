@@ -2,15 +2,10 @@ import {map, pipe, K, I, curry, curryObjectK} from 'f-utility'
 
 import {rail} from './rail'
 import {multiRail} from './multirail'
-// import {Right} from './either/guided-right'
-// import {isEither} from './either/assert'
-import {
-  judgeObject,
-  // allFunctions,
-  allPropsAreFunctions,
-  rejectNonFunctions
-} from './assertions'
-import {expectFn} from './errors/expect-function'
+import {allPropsAreFunctions} from './assertions/all-props-are-functions'
+import {rejectNonFunctions} from './assertions/reject-non-functions'
+import {judgeObject} from './assertions/judge-object'
+import {expectFunctionProps} from './errors/expect-function-props'
 
 /**
  * @method safeWarn
@@ -21,7 +16,7 @@ import {expectFn} from './errors/expect-function'
  */
 const safeWarn = curry((scope, input) => judgeObject({
   deliberation: I,
-  jury: expectFn(scope),
+  jury: expectFunctionProps(scope),
   law: rejectNonFunctions,
   input
 }))
@@ -61,22 +56,3 @@ export const handrail = curry(
     )(input)
   }
 )
-
-/*
-export const handrail2 = curry(
-  function ＸＸＸhandrail2(assertion, wrongPath, rightPath, input) {
-    return pipe(
-      trace(`input!`),
-      // first prove we have good inputs
-      internalRailSafety({assertion, wrongPath, rightPath}),
-      trace(`safe?`),
-      // then use the functions to create a rail
-      multiRail(assertion, wrongPath),
-      trace(`multiRailed?`),
-      // then modify your data if we're on the Right path
-      MAP(rightPath)
-      , trace(`MAPPPPPPPPED`)
-    )(input)
-  }
-)
-*/

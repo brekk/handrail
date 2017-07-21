@@ -4,7 +4,7 @@ import {e0} from 'entrust'
 import {
   judgement,
   judgeObject
-} from './assertions'
+} from './assertions/judge-object'
 
 /* eslint-disable fp/no-unused-expression */
 test.cb(`judgement is just a structured pipe`, (t) => {

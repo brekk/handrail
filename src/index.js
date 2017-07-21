@@ -9,12 +9,7 @@ export * from './handrail'
 export * from './rail'
 export * from './multirail'
 export * from './guiderail'
-export * from './either/ap'
-export * from './either/bimap'
-export * from './either/fold'
-export * from './either/guided'
-export * from './either/guided-left'
-export * from './either/guided-right'
+export * from './either/index'
 
 export const assertions = assert
 

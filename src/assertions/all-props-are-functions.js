@@ -1,6 +1,4 @@
-import {isFunction, pipe, reject} from 'f-utility'
-import {length} from 'katsu-curry/lib/utils/length'
-
+import {isFunction, pipe, reject, length} from 'f-utility'
 export const allPropsAreFunctions = pipe(
   reject(isFunction),
   Object.keys,
