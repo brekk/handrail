@@ -60,6 +60,7 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "browserify": "^14.4.0",
+    "cost-of-modules": "^1.0.1",
     "documentation": "^4.0.0-rc.1",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
