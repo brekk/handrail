@@ -91,7 +91,7 @@
   },
   "dependencies": {
     "entrust": "^0.0.3",
-    "f-utility": "^3.0.4",
+    "f-utility": "^3.0.6",
     "fantasy-eithers": "^0.0.2",
     "katsu-curry": "^0.0.8",
     "ramda": "^0.24.0"
