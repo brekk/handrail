@@ -1,4 +1,5 @@
 import test from 'ava'
+import {reject, isFunction} from 'f-utility'
 // import K from 'ramda/src/always'
 // import identity from 'ramda/src/identity'
 import * as Ｘ from './index'
@@ -8,32 +9,43 @@ const {
   Right
 } = Ｘ
 
+const zort = (x) => x.sort() // eslint-disable-line fp/no-mutating-methods
+
 const YAHH = `examples -`
 
 /* eslint-disable fp/no-unused-expression */
 test(`published src should have access to all keys`, (t) => {
   t.deepEqual(
-    Object.keys(Ｘ).sort(), // eslint-disable-line fp/no-mutating-methods
-    [
-      `GuidedLeft`,
-      `GuidedRight`,
-      `Left`,
-      `Right`,
-      `ap`,
-      `assertions`,
-      `baluster`,
-      `balustrade`,
-      `bimap`,
-      `chain`,
-      `fold`,
-      `guideRail`,
-      `guided`,
-      `handrail`,
-      `map`,
-      `multiRail`,
-      `net`,
-      `rail`
-    ])
+    zort(
+      Object.keys(Ｘ)
+    ),
+    zort(
+      [
+        `GuidedLeft`,
+        `GuidedRight`,
+        `Left`,
+        `Right`,
+        `ap`,
+        `isEither`,
+        `baluster`,
+        `balustrade`,
+        `bimap`,
+        `chain`,
+        `fold`,
+        `guideRail`,
+        `guided`,
+        `handrail`,
+        `map`,
+        `multiRail`,
+        `net`,
+        `rail`
+      ]
+    )
+  )
+  t.deepEqual(
+    reject(isFunction, Ｘ),
+    {}
+  )
 })
 
 test(`${YAHH} JSON.parse`, (t) => {
