@@ -1,6 +1,5 @@
-import {_map} from 'f-utility'
+import {map as _map} from 'f-utility'
 import _chain from 'ramda/src/chain'
-import assert from './either/assert'
 
 export const map = _map
 export const chain = _chain
@@ -9,14 +8,7 @@ export * from './handrail'
 export * from './rail'
 export * from './multirail'
 export * from './guiderail'
-export * from './either/ap'
-export * from './either/bimap'
-export * from './either/fold'
-export * from './either/guided'
-export * from './either/guided-left'
-export * from './either/guided-right'
-
-export const assertions = assert
+export * from './either/index'
 
 // Extended metaphor API
 export {rail as baluster} from './rail'

@@ -17,14 +17,16 @@ const COSTFILE = `./costs`
 const MINIFIED = `./dist/handrail.min.js`
 const MINIFIED_BROWSER = `./dist/handrail.browser.min.js`
 
-const filterSpecs = [
-  `jayin "_.toPairs(x)`,
+const filterSpecs = (stringify = false) => ([
+  `jayin "${stringify ? `JSON.stringify(` : ``}_.toPairs(x)`,
   `.map(([k, v]) => ([k,`,
   `_.map(v, (y) => y.indexOf('node_modules') > -1 ? y.substr(y.indexOf('node_modules') + 13) : y)`,
   `]))`,
   `.filter(([k, v]) => !(k.indexOf('spec') > -1))`,
-  `.reduce((agg, [k, v]) => Object.assign({}, agg, {[k]: v}), {})"`
-].join(``)
+  `.filter(([k, v]) => !(k.indexOf('scss') > -1))`,
+  `.filter(([k, v]) => !(k.indexOf('css') > -1))`,
+  `.reduce((agg, [k, v]) => Object.assign({}, agg, {[k]: v}), {})${stringify ? `, null, 2)` : ``}"`
+].join(``))
 
 module.exports = {
   scripts: {
@@ -70,12 +72,12 @@ module.exports = {
         description: `check dependencies`
       },
       graph: {
-        script: `madge src --image dependencies.svg`,
+        script: `madge src --json | ${filterSpecs(false)} | madge --stdin --image dependencies.svg`,
         description: `generate a visual dependency graph`
       },
-      graph2: {
-        script: `madge src --json | ${filterSpecs} | madge --stdin --image dependencies.svg`,
-        description: `generate a visual dependency graph`
+      dot: {
+        script: `madge src --json | ${filterSpecs(false)} | madge --stdin --dot > dependencies.gv`,
+        description: `generate a visual dependency graph in DOT format`
       }
     },
     dist: {
@@ -116,7 +118,7 @@ module.exports = {
     },
     regenerate: {
       description: `regenerate readme`,
-      script: series(`nps regenerate.readme`, `nps regenerate.addAPI`),
+      script: series(`nps regenerate.readme`, `nps regenerate.addAPI`, `nps dependencies.graph`),
       readme: {
         description: `run ljs2 against example.literate.js to get our README.md file regenerated`,
         script: `ljs2 example.literate.js -o README.md`

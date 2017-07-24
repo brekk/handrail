@@ -25,7 +25,7 @@ const messenger = pipe(grab, prop(`message`))
 
 /* eslint-disable fp/no-mutation */
 random.keyValue = (x = 10) => (
-  [random.word(x), random.floorMin(0, x)]
+  [random.word(x), random.floorMin(1, x)]
 )
 /* eslint-enable fp/no-mutation */
 
