@@ -1,5 +1,4 @@
-import chain from 'ramda/src/chain'
-import {curry} from 'f-utility'
+import {chain, curry} from 'f-utility'
 import {rail} from './rail'
 
 /**

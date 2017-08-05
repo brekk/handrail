@@ -1,5 +1,4 @@
-import {map as _map} from 'f-utility'
-import _chain from 'ramda/src/chain'
+import {map as _map, chain as _chain} from 'f-utility'
 
 export const map = _map
 export const chain = _chain
