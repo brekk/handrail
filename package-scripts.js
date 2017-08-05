@@ -1,4 +1,4 @@
-const curry = require(`ramda/src/curry`)
+const {curry} = require(`f-utility`)
 const utils = require(`nps-utils`)
 const {version} = require(`./package.json`)
 
@@ -33,22 +33,17 @@ module.exports = {
     build: {
       description: `do a per file conversion from /src to /lib`,
       // script: `nps build.rollup`,
-      script: allNPS(
-        `build.babel`,
-        `build.rollup`
-      ),
-      babel: {
-        description: `convert files`,
-        script: `babel src -d lib --ignore *.spec.js`
-      },
+      script: `nps build.rollup`,
+      // babel: {
+      //   description: `convert files`,
+      //   script: `babel src -d lib --ignore *.spec.js`
+      // },
       rollup: {
         description: `generate with rollup`,
         script: series(
-          `rollup -c config/commonjs.js`,
           mkdirp(`dist`),
-          `browserify --node -s handrail ./lib/index.js > ${MINIFIED_BROWSER}`,
-          `uglifyjs --compress --mangle -o ${MINIFIED} -- ./lib/index.js`,
-          `uglifyjs --compress --mangle -o ${MINIFIED_BROWSER} -- ${MINIFIED_BROWSER}`,
+          `rollup -c config/commonjs.js`,
+          `browserify --node -s handrail ${MINIFIED} > ${MINIFIED_BROWSER}`,
           prepend(`/* handrail v.${version} */`, MINIFIED),
           prepend(`/* handrail v.${version} */`, MINIFIED_BROWSER)
         )

@@ -1,5 +1,6 @@
 const progress = require(`rollup-plugin-progress`)
 const babili = require(`rollup-plugin-babili`)
+const uglify = require(`rollup-plugin-uglify`)
 const commonjs = require(`rollup-plugin-commonjs`)
 const cleanup = require(`rollup-plugin-cleanup`)
 const resolve = require(`rollup-plugin-node-resolve`)
@@ -13,11 +14,13 @@ module.exports = {
   external,
   globals: {
     E: `fantasy-eithers`,
-    R: `ramda`
+    F: `f-utility`
   },
   moduleName: pkg.name,
   plugins: [
     progress(),
+    json(),
+    buble(),
     commonjs({
       extensions: [`.js`],
       include: `node_modules/**`,
@@ -25,30 +28,19 @@ module.exports = {
         // left-hand side can be an absolute path, a path
         // relative to the current directory, or the name
         // of a module in node_modules
-        'node_modules/ramda/all.js': [ `all` ],
-        'node_modules/ramda/always.js': [ `K` ],
-        'node_modules/ramda/allPass.js': [ `allPass` ],
-        'node_modules/ramda/curry.js': [ `curry` ],
-        'node_modules/ramda/chain.js': [ `chain` ],
-        'node_modules/ramda/prop.js': [ `prop` ],
-        'node_modules/ramda/propSatisfies.js': [ `propSatisfies` ],
-        'node_modules/ramda/pipe.js': [ `pipe` ],
-        'node_modules/ramda/map.js': [ `map` ],
-        'node_modules/ramda/identity.js': [ `identity` ],
-        'node_modules/fantasy-eithers/index.js': [ `E` ]
+        // 'ramda/all.js': [ `all` ]
       }
     }),
-    buble(),
     resolve({
       jsnext: true,
       main: true
     }),
-    json(),
     cleanup({
       comments: `none`
     }),
     babili({
       // removeConsole: true
-    })
+    }),
+    uglify()
   ]
 }

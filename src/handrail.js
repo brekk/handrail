@@ -45,14 +45,12 @@ const internalRailSafety = curryObjectK(
  * @public
  */
 export const handrail = curry(
-  function ＸＸＸhandrail(assertion, wrongPath, rightPath, input) {
-    return pipe(
-      // first prove we have good inputs
-      internalRailSafety({assertion, wrongPath, rightPath}),
-      // then use the functions to create a rail
-      multiRail(assertion, wrongPath),
-      // then modify your data if we're on the Right path
-      map(rightPath)
-    )(input)
-  }
+  (assertion, wrongPath, rightPath, input) => pipe(
+    // first prove we have good inputs
+    internalRailSafety({assertion, wrongPath, rightPath}),
+    // then use the functions to create a rail
+    multiRail(assertion, wrongPath),
+    // then modify your data if we're on the Right path
+    map(rightPath)
+  )(input)
 )

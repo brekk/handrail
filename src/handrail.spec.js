@@ -1,6 +1,5 @@
 import test from 'ava'
-import {random} from 'f-utility'
-import {prop, always as K, curry, pipe, identity} from 'ramda'
+import {random, prop, K, curry, pipe, I as identity} from 'f-utility'
 import {isEither} from './either/assert'
 import {
   Right,
