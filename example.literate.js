@@ -249,5 +249,17 @@ const cashAndAgeSafeBartender2 = guideRail(
 )
 
 /**
+### Changelog
+
+-   [1.0.0](https://github.com/brekk/handrail/tree/v1.0.0) - initial commit
+-   [1.0.3](https://github.com/brekk/handrail/tree/v1.0.3) - added null safety
+-   [1.0.4](https://github.com/brekk/handrail/tree/v1.0.4) - started using `katsu-curry`
+-   [1.0.5](https://github.com/brekk/handrail/tree/v1.0.5) - added `guideRail`
+-   [1.1.5](https://github.com/brekk/handrail/tree/v1.1.5) - reduced total size
+-   [1.2.0](https://github.com/brekk/handrail/tree/v1.2.0) - modularized codebase
+-   [1.3.0](https://github.com/brekk/handrail/tree/v1.3.0) - updated dependencies
+-   [1.3.3](https://github.com/brekk/handrail/tree/v1.3.3) - fix exports
+-   [1.3.4](https://github.com/brekk/handrail/tree/v1.3.4) - swap to jest, update speeds
+
 ### API
  */
