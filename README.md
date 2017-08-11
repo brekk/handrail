@@ -220,11 +220,25 @@ Add safety to your pipelines!
 -   `wrongPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** function invoked if the inputs are bad
 -   `input` **any** any input
 
+**Examples**
+
+```javascript
+import {rail} from 'handrail'
+import pipe from 'ramda/src/pipe'
+const divide = (a, b) => a / b
+const safeDivide = curry((a, b) => pipe(
+  rail(() => b !== 0, () => `Expected ${b} to not be zero!`),
+  divide(a)
+)(b)
+```
+
 Returns **(GuidedRight | GuidedLeft)** Left / Right -wrapped value
 
 #### multiRail
 
 `multiRail` is nearly-identical to `rail`, but should only be used if `rail` is already in use
+This is a useful function if you need very granular control of your pipe. If not, you should
+probably use `guideRail` instead.
 
 **Parameters**
 
@@ -232,9 +246,25 @@ Returns **(GuidedRight | GuidedLeft)** Left / Right -wrapped value
 -   `wrongPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** function invoked if the inputs are bad
 -   `input` **any** any input
 
+**Examples**
+
+```javascript
+import {rail, multiRail} from 'handrail'
+import pipe from 'ramda/src/pipe'
+const divide = (a, b) => a / b
+const safeDivide = curry((a, b) => pipe(
+  rail(() => (typeof a === `number`), () => `Expected ${a} to be a number!`),
+  multiRail(() => (typeof b === `number`), () => `Expected ${b} to be a number!`)
+  multiRail(() => b !== 0, () => `Expected ${b} to not be zero!`),
+  divide(a)
+)(b)
+```
+
 Returns **(GuidedRight | GuidedLeft)** Left / Right -wrapped value
 
 #### guideRail
+
+Encapsulate error states in a simple structure that returns a Left on error or Right on success
 
 **Parameters**
 
