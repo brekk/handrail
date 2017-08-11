@@ -87,7 +87,7 @@ module.exports = {
       coverage: `mkdirp coverage`,
       description: `generate a coverage directory`
     },
-    precommit: {
+    care: {
       description: `the tasks auto-run before commits`,
       script: allNPS(`dist`, `test`, `cost`, `regenerate`)
     },

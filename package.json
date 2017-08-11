@@ -107,7 +107,7 @@
     "meta.auto": "nps meta.auto",
     "mkdir.coverage": "nps mkdir.coverage",
     "publish": "nps publish",
-    "precommit": "nps precommit",
+    "precommit": "nps care",
     "test": "nps test",
     "test.es6": "nps test.es6",
     "test.log": "nps test.log",

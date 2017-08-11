@@ -1,18 +1,67 @@
 /**
 ![handrail](https://cdn.rawgit.com/brekk/handrail/56db4bd/logo.svg)
-> a toolset for adding safety to your functional pipelines
+
+a toolset for adding safety to your functional pipelines
 
 Please read the [accompanying post](https://codepen.io/brekk/post/3c7f65946d644e17ef37d30a9ba4cd15/visual-function-composition) for more in depth explanation.
 
 This utility adds [logical disjunction](https://en.wikipedia.org/wiki/Logical_disjunction) / [railway-oriented programming](https://fsharpforfunandprofit.com/rop) to your functional pipelines.
 
-Largely this utility sits on top of `fantasy-eithers`, which provides the Either functionality we rely upon.
+_NB: See this file in a runnable form here: [example.literate.js](https://cdn.rawgit.com/brekk/handrail/56db4bd/example.literate.js)_
 
-See this file in a runnable form here: [example.literate.js](https://cdn.rawgit.com/brekk/handrail/56db4bd/example.literate.js)
+## Install
+
+```
+yarn add handrail -S
+```
+or
+```
+npm i handrail -S
+```
+
+## Use
+
+Here's a simple example where we can make an unsafe function safer while not modifying it.
+
+```js
+/*
+import {guideRail, fold} from 'handrail'
+
+// here are two potential error cases
+const usersShouldBe21 = ({age}) => age > 20
+const usersShouldHaveCashToCoverABeer = ({cash}) => cash - 5 >= 0
+
+// and these are the cases we pass to the end, before folding
+const warnYoungsters = (user) => `Expected ${user.name} to be 21!`
+const warnWouldBeDebtors = (user) => `Expected ${user.name} to have at least 5 dollars!`
+
+const unscrupulousBartender = (user) => {
+  user.cash -= 5
+  user.beverages = user.beverages || []
+  user.beverages.push(`beer`)
+  return user
+}
+
+const cashAndAgeSafeBartender = fold(I, I, guideRail(
+  [
+    // add safety for age!
+    [usersShouldBe21, warnYoungsters],
+    // add safety for cash!
+    [usersShouldHaveCashToCoverABeer, warnWouldBeDebtors]
+    // add more!
+  ],
+  // alter the Either value
+  unscrupulousBartender
+))
+\*\/
+```
+
+## Example
 
 Here's a contrived problem that `handrail` can help us solve:
 
 1. Jimmy and Alice want to go drinking, but Jimmy isn't of legal drinking age.
+```
 */
 
 const resetUsers = () => ({
@@ -44,7 +93,7 @@ console.log(`jimmy goes to the bar`, unscrupulousBartender(jimmy))
 */
 
 // import {handrail} from "handrail"
-const {handrail} = require(`./index`)
+const {handrail} = require(`./handrail`)
 
 const ageAttentiveBartender = handrail(
   (user) => user.age > 20,
@@ -65,7 +114,7 @@ This is an `Either`; it's either a Left or a Right. In either case, when we wann
 */
 
 // import {fold} from 'handrail'
-const {fold} = require(`./index`)
+const {fold} = require(`./handrail`)
 
 /**
 `fold` takes three parameters. The first two are functions, the first is invoked when the value is a Left, and the other is invoked when the value is a Right. Finally, the last parameter is an Either (Left / Right). This is a curried function, so you can specify what to do as a resolution well before you have an Either.
@@ -124,7 +173,7 @@ We'll use `rail` and `multiRail`, which will allow us to add more than one asser
 */
 
 // import {rail, multiRail} from 'handrail'
-const {rail, multiRail} = require(`./index`)
+const {rail, multiRail} = require(`./handrail`)
 
 /**
 (NB: This example leans a little more heavily on an understanding of `pipe`, which is described in more detail [here](https://codepen.io/brekk/post/functional-workaholism#function-composition-7). Simple example: `pipe((x) => x + 5, (y) => y - 7)` is the same as `(z) => z - 2`)
@@ -180,7 +229,7 @@ cashAndAgeSafeBartender(alice)
 Finally, to round it out, you can use `guideRail` to automate the above process:
 */
 
-const {guideRail} = require(`./index`)
+const {guideRail} = require(`./handrail`)
 
 const cashAndAgeSafeBartender2 = guideRail(
   [
