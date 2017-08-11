@@ -2,9 +2,8 @@ import {map, pipe, curry} from 'f-utility'
 import {rail} from './rail'
 import {multiRail} from './multirail'
 
-const multiMap = ([a, w]) => multiRail(a, w)
-
 /**
+ * Encapsulate error states in a simple structure that returns a Left on error or Right on success
  * @method guideRail
  * @param {functions[]} rails - an array of [assertion, failCase] pairs
  * @param {function} goodPath - what to do if things go well
@@ -31,6 +30,7 @@ const multiMap = ([a, w]) => multiRail(a, w)
  */
 export const guideRail = curry(
   (rails, goodPath, input) => {
+    const multiMap = ([a, w]) => multiRail(a, w)
     const [first, ...rest] = rails // eslint-disable-line fp/no-rest-parameters
     const [firstAssertion, wrongPath] = first
     return pipe(

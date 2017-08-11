@@ -1,13 +1,14 @@
-import test from 'ava'
+/* global test */
 import {map} from 'f-utility'
 import {e0} from 'entrust'
 import {
   judgement,
   judgeObject
 } from './assertions/judge-object'
+import {t} from './test-helpers'
 
 /* eslint-disable fp/no-unused-expression */
-test.cb(`judgement is just a structured pipe`, (t) => {
+test(`judgement is just a structured pipe`, (done) => {
   t.plan(3)
   t.is(typeof judgement, `function`)
   const input = `some input`
@@ -20,7 +21,7 @@ test.cb(`judgement is just a structured pipe`, (t) => {
       t.is(x, input)
       return x
     },
-    jury: () => t.end(),
+    jury: done,
     input
   }
   return judgement(inputO)
@@ -29,7 +30,7 @@ test.cb(`judgement is just a structured pipe`, (t) => {
 const upper = e0(`toUpperCase`)
 const lower = e0(`toLowerCase`)
 
-const testFn = (fn) => (t) => {
+const testFn = (fn) => (done) => {
   t.plan(fn === judgeObject ? 3 : 4)
   t.is(typeof fn, `function`)
   const input = {k: `Some input with MIXED capitalization`}
@@ -55,20 +56,43 @@ const testFn = (fn) => (t) => {
       } else {
         t.deepEqual(end, [`k`])
       }
-      t.end()
+      done()
     },
     input
   }
   return fn(inputO)
 }
 
-test.cb(
+test(
   `judgement is just a structured pipe (and pre and post are useful)`,
   testFn(judgement)
 )
 
-test.cb(
+test(
   `judgeObject is just a structured pipe (and pre and post are useful)`,
   testFn(judgeObject)
 )
+
+test(
+  `judgement's deliberation is identity by default`,
+  (done) => {
+    t.plan(3)
+    t.is(typeof judgement, `function`)
+    const input = {k: `some input with mixed capitalization`}
+    const inputO = {
+      law: (x) => {
+        t.deepEqual(x, input)
+        return x
+      },
+      jury: (end) => {
+        const {k} = end
+        t.is(k, k.toLowerCase())
+        done()
+      },
+      input
+    }
+    return judgement(inputO)
+  }
+)
+
 /* eslint-enable fp/no-unused-expression */

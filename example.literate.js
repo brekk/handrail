@@ -1,18 +1,72 @@
 /**
 ![handrail](https://cdn.rawgit.com/brekk/handrail/56db4bd/logo.svg)
-> a toolset for adding safety to your functional pipelines
+
+a toolset for adding safety to your functional pipelines
 
 Please read the [accompanying post](https://codepen.io/brekk/post/3c7f65946d644e17ef37d30a9ba4cd15/visual-function-composition) for more in depth explanation.
 
 This utility adds [logical disjunction](https://en.wikipedia.org/wiki/Logical_disjunction) / [railway-oriented programming](https://fsharpforfunandprofit.com/rop) to your functional pipelines.
 
-Largely this utility sits on top of `fantasy-eithers`, which provides the Either functionality we rely upon.
+_NB: See this file in a runnable form here: [example.literate.js](https://cdn.rawgit.com/brekk/handrail/56db4bd/example.literate.js)_
 
-See this file in a runnable form here: [example.literate.js](https://cdn.rawgit.com/brekk/handrail/56db4bd/example.literate.js)
+## Install
+
+```
+yarn add handrail -S
+```
+or
+```
+npm i handrail -S
+```
+
+## Use
+
+Here's an all-in-one example where we can make an unsafe function safer while not modifying the original:
+
+```js
+import {guideRail, fold} from 'handrail'
+import pipe from 'ramda/src/pipe'
+
+// here are two potential error cases
+const over21 = ({age}) => age > 20
+const hasMoney = ({cash}) => cash - 5 >= 0
+
+// and these are the cases we pass to the end, before folding
+const growUp = (user) => `Expected ${user.name} to be 21!`
+const getAJob = (user) => `Expected ${user.name} to have at least 5 dollars!`
+
+// here's our original function, which has some errors in its assumptions
+const bartenderOfIllRepute = (user) => {
+  user.cash -= 5
+  user.beverages = user.beverages || []
+  user.beverages.push(`beer`)
+  return user
+}
+
+// here's how we fix it with `guideRail`
+const bartenderOfGoodRepute = pipe(
+  guideRail(
+    [
+      // add safety for age!
+      [over21, growUp],
+      // add safety for cash!
+      [hasMoney, getAJob]
+      // add more!
+    ],
+    // alter the Either value
+    bartenderOfIllRepute
+  ),
+  // this just pulls our value out from the Either (see the [fold API](https://github.com/brekk/handrail#fold) below)
+  fold(I, I)
+)
+```
+
+## Example
 
 Here's a contrived problem that `handrail` can help us solve:
 
 1. Jimmy and Alice want to go drinking, but Jimmy isn't of legal drinking age.
+```
 */
 
 const resetUsers = () => ({
@@ -44,7 +98,7 @@ console.log(`jimmy goes to the bar`, unscrupulousBartender(jimmy))
 */
 
 // import {handrail} from "handrail"
-const {handrail} = require(`./index`)
+const {handrail} = require(`./handrail`)
 
 const ageAttentiveBartender = handrail(
   (user) => user.age > 20,
@@ -65,7 +119,7 @@ This is an `Either`; it's either a Left or a Right. In either case, when we wann
 */
 
 // import {fold} from 'handrail'
-const {fold} = require(`./index`)
+const {fold} = require(`./handrail`)
 
 /**
 `fold` takes three parameters. The first two are functions, the first is invoked when the value is a Left, and the other is invoked when the value is a Right. Finally, the last parameter is an Either (Left / Right). This is a curried function, so you can specify what to do as a resolution well before you have an Either.
@@ -124,10 +178,10 @@ We'll use `rail` and `multiRail`, which will allow us to add more than one asser
 */
 
 // import {rail, multiRail} from 'handrail'
-const {rail, multiRail} = require(`./index`)
+const {rail, multiRail} = require(`./handrail`)
 
 /**
-(NB: This example leans a little more heavily on an understanding of `pipe`, which is described in more detail [here](https://codepen.io/brekk/post/functional-workaholism#function-composition-7). Simple example: `pipe((x) => x + 5, (y) => y - 7)` is the same as `(z) => z - 2`)
+(NB: This example leans a little more heavily on an understanding of `pipe`, which is described in more detail [here](https://codepen.io/brekk/post/functional-workaholism#function-composition-7). Simple example: `pipe((x) => x + 5, (y) => y - 7)` is the same as a new function `(z) => z - 2`)
 */
 
 /* for easier recall:
@@ -180,7 +234,7 @@ cashAndAgeSafeBartender(alice)
 Finally, to round it out, you can use `guideRail` to automate the above process:
 */
 
-const {guideRail} = require(`./index`)
+const {guideRail} = require(`./handrail`)
 
 const cashAndAgeSafeBartender2 = guideRail(
   [
@@ -195,5 +249,17 @@ const cashAndAgeSafeBartender2 = guideRail(
 )
 
 /**
+### Changelog
+
+-   [1.0.0](https://github.com/brekk/handrail/tree/v1.0.0) - initial commit
+-   [1.0.3](https://github.com/brekk/handrail/tree/v1.0.3) - added null safety
+-   [1.0.4](https://github.com/brekk/handrail/tree/v1.0.4) - started using `katsu-curry`
+-   [1.0.5](https://github.com/brekk/handrail/tree/v1.0.5) - added `guideRail`
+-   [1.1.5](https://github.com/brekk/handrail/tree/v1.1.5) - reduced total size
+-   [1.2.0](https://github.com/brekk/handrail/tree/v1.2.0) - modularized codebase
+-   [1.3.0](https://github.com/brekk/handrail/tree/v1.3.0) - updated dependencies
+-   [1.3.3](https://github.com/brekk/handrail/tree/v1.3.3) - fix exports
+-   [1.3.4](https://github.com/brekk/handrail/tree/v1.3.4) - swap to jest, update speeds
+
 ### API
  */

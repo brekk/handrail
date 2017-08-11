@@ -23,6 +23,14 @@ const safeRailInputs = pipe(
  * @param {*} input - any input
  * @returns {GuidedRight|GuidedLeft} Left / Right -wrapped value
  * @public
+ * @example
+ * import {rail} from 'handrail'
+ * import pipe from 'ramda/src/pipe'
+ * const divide = (a, b) => a / b
+ * const safeDivide = curry((a, b) => pipe(
+ *   rail(() => b !== 0, () => `Expected ${b} to not be zero!`),
+ *   divide(a)
+ * )(b)
  */
 export const rail = curry(
   function ＸＸＸrail(assertion, wrongPath, input) {
