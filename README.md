@@ -18,39 +18,44 @@ or
 
 ## Use
 
-Here's a simple example where we can make an unsafe function safer while not modifying it.
+Here's an all-in-one example where we can make an unsafe function safer while not modifying the original:
 
 ```js
-/*
 import {guideRail, fold} from 'handrail'
+import pipe from 'ramda/src/pipe'
 
 // here are two potential error cases
-const usersShouldBe21 = ({age}) => age > 20
-const usersShouldHaveCashToCoverABeer = ({cash}) => cash - 5 >= 0
+const over21 = ({age}) => age > 20
+const hasMoney = ({cash}) => cash - 5 >= 0
 
 // and these are the cases we pass to the end, before folding
-const warnYoungsters = (user) => `Expected ${user.name} to be 21!`
-const warnWouldBeDebtors = (user) => `Expected ${user.name} to have at least 5 dollars!`
+const growUp = (user) => `Expected ${user.name} to be 21!`
+const getAJob = (user) => `Expected ${user.name} to have at least 5 dollars!`
 
-const unscrupulousBartender = (user) => {
+// here's our original function, which has some errors in its assumptions
+const bartenderOfIllRepute = (user) => {
   user.cash -= 5
   user.beverages = user.beverages || []
   user.beverages.push(`beer`)
   return user
 }
 
-const cashAndAgeSafeBartender = fold(I, I, guideRail(
-  [
-    // add safety for age!
-    [usersShouldBe21, warnYoungsters],
-    // add safety for cash!
-    [usersShouldHaveCashToCoverABeer, warnWouldBeDebtors]
-    // add more!
-  ],
-  // alter the Either value
-  unscrupulousBartender
-))
-\*\/
+// here's how we fix it with `guideRail`
+const bartenderOfGoodRepute = pipe(
+  guideRail(
+    [
+      // add safety for age!
+      [over21, growUp],
+      // add safety for cash!
+      [hasMoney, getAJob]
+      // add more!
+    ],
+    // alter the Either value
+    bartenderOfIllRepute
+  ),
+  // this just pulls our value out from the Either (see the [fold API](https://github.com/brekk/handrail#fold) below)
+  fold(I, I)
+)
 ```
 
 ## Example
@@ -172,7 +177,7 @@ We'll use `rail` and `multiRail`, which will allow us to add more than one asser
 const {rail, multiRail} = require(`./handrail`)
 ```
 
-(NB: This example leans a little more heavily on an understanding of `pipe`, which is described in more detail [here](https://codepen.io/brekk/post/functional-workaholism#function-composition-7). Simple example: `pipe((x) => x + 5, (y) => y - 7)` is the same as `(z) => z - 2`)
+(NB: This example leans a little more heavily on an understanding of `pipe`, which is described in more detail [here](https://codepen.io/brekk/post/functional-workaholism#function-composition-7). Simple example: `pipe((x) => x + 5, (y) => y - 7)` is the same as a new function `(z) => z - 2`)
 
 ```js
 /* for easier recall:
