@@ -47,7 +47,6 @@
     "check-coverage": true
   },
   "devDependencies": {
-    "ava": "^0.19.1",
     "babel-cli": "^6.24.1",
     "babel-core": "6.25.0",
     "babel-eslint": "^7.2.3",
@@ -73,6 +72,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "get-es-imports-exports": "^1.0.7",
     "husky": "^0.13.3",
+    "jest": "^20.0.4",
     "ljs2": "1.0.3",
     "madge": "^2.0.0",
     "nps": "5.7.0",
@@ -88,7 +88,6 @@
     "rollup-plugin-post-replace": "^1.0.0",
     "rollup-plugin-progress": "^0.2.1",
     "rollup-plugin-uglify": "^2.0.1",
-    "uglify-js": "3.0.27",
     "xtrace": "^0.0.8"
   },
   "dependencies": {

@@ -1,5 +1,6 @@
-import test from 'ava'
+/* global test */
 import {I, map, pipe, reject, isFunction} from 'f-utility'
+import {t} from './test-helpers'
 // import {trace} from 'xtrace'
 // import K from 'ramda/src/always'
 // import identity from 'ramda/src/identity'
@@ -15,7 +16,7 @@ const zort = (x) => x.sort() // eslint-disable-line fp/no-mutating-methods
 const HR = `handrail -`
 
 /* eslint-disable fp/no-unused-expression */
-test(`${HR} published module should have access to all keys`, (t) => {
+test(`${HR} published module should have access to all keys`, () => {
   t.deepEqual(
     zort(
       Object.keys(X)
@@ -49,7 +50,7 @@ test(`${HR} published module should have access to all keys`, (t) => {
   )
 })
 
-test(`${HR} JSON.parse`, (t) => {
+test(`${HR} JSON.parse`, () => {
   t.plan(5)
   t.is(typeof X, `object`)
   t.is(typeof X.handrail, `function`)
@@ -76,7 +77,7 @@ test(`${HR} JSON.parse`, (t) => {
   t.deepEqual(safeParse(`{}`), Right({}))
 })
 
-test(`${HR} literate example`, (t) => {
+test(`${HR} literate example`, () => {
   const unscrupulousBartender = (user) => {
     /* eslint-disable fp/no-mutation */
     /* eslint-disable fp/no-mutating-methods */

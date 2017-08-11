@@ -1,5 +1,6 @@
-import test from 'ava'
+/* global test */
 import {random, prop, K, curry, pipe, I as identity} from 'f-utility'
+import {t} from './test-helpers'
 import {isEither} from './either/assert'
 import {
   Right,
@@ -30,7 +31,8 @@ random.keyValue = (x = 10) => (
 
 /* eslint-disable fp/no-unused-expression */
 
-test(`GuidedRight should behave like Right given non-Either inputs`, (t) => {
+test(`GuidedRight should behave like Right given non-Either inputs`, () => {
+  t.plan(5)
   const input = random.word(10)
   const r = Right(input)
   const r2 = GuidedRight(input)
@@ -41,7 +43,8 @@ test(`GuidedRight should behave like Right given non-Either inputs`, (t) => {
   t.falsy(isLeft(r2))
 })
 
-test(`GuidedRight should respect Left inputs`, (t) => {
+test(`GuidedRight should respect Left inputs`, () => {
+  t.plan(6)
   const input = random.word(10)
   const inner = Left(input)
   const r = Right(inner)
@@ -56,7 +59,8 @@ test(`GuidedRight should respect Left inputs`, (t) => {
 
 const expectedKeys = [`r`]
 
-test(`GuidedRight should respect Right inputs`, (t) => {
+test(`GuidedRight should respect Right inputs`, () => {
+  t.plan(10)
   const input = random.word(10)
   const inner = Right(input)
   const r = Right(inner)
@@ -73,8 +77,8 @@ test(`GuidedRight should respect Right inputs`, (t) => {
   t.deepEqual(r.r.r, r2.r)
 })
 
-test(`rail / baluster should Rightify a good input`, (t) => {
-  t.plan(3)
+test(`rail / baluster should Rightify a good input`, (done) => {
+  t.plan(2)
   const input = random.keyValue(5)
   const [k, v] = input
   const assertion = (x) => !!x[k]
@@ -89,13 +93,13 @@ test(`rail / baluster should Rightify a good input`, (t) => {
     t.fail,
     (r) => {
       t.is(r[k], v)
-      return t.pass()
+      done()
     },
     good
   )
 })
 
-test(`rail / baluster should Leftify a bad input`, (t) => {
+test(`rail / baluster should Leftify a bad input`, () => {
   t.plan(2)
   const input = random.keyValue(5)
   const [k, v] = input
@@ -117,29 +121,29 @@ test(`rail / baluster should Leftify a bad input`, (t) => {
     bad
   )
 })
-test.cb(`rail should Leftify a null input`, (t) => {
+test(`rail should Leftify a null input`, (done) => {
   t.plan(1)
   const bad = rail(K(true), K(`shit`), null)
   fold((x) => {
     t.is(x.message, `rail: Expected to be given non-null input.`)
-    t.end()
+    done()
   }, t.fail, bad)
 })
 
-test(`rail should fail with a Left when assertion is not a function`, (t) => {
+test(`rail should fail with a Left when assertion is not a function`, () => {
   const badSafety = rail({}, identity, `whatever`)
   t.is(messenger(badSafety), `rail: Expected assertion to be function.`)
 })
-test(`rail should fail with a Left when wrongPath is not a function`, (t) => {
+test(`rail should fail with a Left when wrongPath is not a function`, () => {
   const badDivider = rail(identity, {}, `whatever`)
   t.is(messenger(badDivider), `rail: Expected wrongPath to be function.`)
 })
-test(`rail should fail with a Left when assertion and wrongPath are not functions`, (t) => {
+test(`rail should fail with a Left when assertion and wrongPath are not functions`, () => {
   const dumbInputs = rail({}, {}, `whatever`)
   t.is(messenger(dumbInputs), `rail: Expected assertion, wrongPath to be functions.`)
 })
 
-const testIt = curry((fn, t) => {
+test(`handrail should allow for adding simple rails to a given function`, () => {
   t.plan(2)
   const input = random.keyValue(5)
   const [k, v] = input
@@ -159,7 +163,7 @@ const testIt = curry((fn, t) => {
   const badObject = {
     ugh: `crapdammit ` + random.word(4)
   }
-  const safeFunction = fn(assertion, (x) => ({
+  const safeFunction = handrail(assertion, (x) => ({
     ...badObject,
     ...x
   }), myFunction)
@@ -173,40 +177,38 @@ const testIt = curry((fn, t) => {
     ...input1
   })
 })
-
-test(`handrail should allow for adding simple rails to a given function`, testIt(handrail))
 // test(`handrail2 should allow for adding simple rails to a given function`, testIt(handrail2))
 
-test(`handrail should fail if assertion is not a function`, (t) => {
+test(`handrail should fail if assertion is not a function`, () => {
   const x = handrail({}, identity, identity, `whatever`)
   t.deepEqual(messenger(x), `handrail: Expected assertion to be function.`)
 })
-test(`handrail should fail if wrongPath is not a function`, (t) => {
+test(`handrail should fail if wrongPath is not a function`, () => {
   const y = handrail(identity, {}, identity, `whatever`)
   t.deepEqual(messenger(y), `handrail: Expected wrongPath to be function.`)
 })
-test(`handrail should fail if rightPath is not a function`, (t) => {
+test(`handrail should fail if rightPath is not a function`, () => {
   const z = handrail(identity, identity, {}, `whatever`)
   t.deepEqual(messenger(z), `handrail: Expected rightPath to be function.`)
 })
-test(`handrail should fail with multiple assertions when there are multiple failures: 1`, (t) => {
+test(`handrail should fail with multiple assertions when there are multiple failures: 1`, () => {
   const a = handrail({}, {}, {}, `whatever`)
   t.deepEqual(messenger(a), `handrail: Expected assertion, wrongPath, rightPath to be functions.`)
 })
-test(`handrail should fail with multiple assertions when there are multiple failures: 2`, (t) => {
+test(`handrail should fail with multiple assertions when there are multiple failures: 2`, () => {
   const b = handrail(identity, {}, {}, `whatever`)
   t.deepEqual(messenger(b), `handrail: Expected wrongPath, rightPath to be functions.`)
 })
-test(`handrail should fail with multiple assertions when there are multiple failures: 3`, (t) => {
+test(`handrail should fail with multiple assertions when there are multiple failures: 3`, () => {
   const c = handrail({}, identity, {}, `whatever`)
   t.deepEqual(messenger(c), `handrail: Expected assertion, rightPath to be functions.`)
 })
-test(`handrail should fail with multiple assertions when there are multiple failures: 4`, (t) => {
+test(`handrail should fail with multiple assertions when there are multiple failures: 4`, () => {
   const d = handrail({}, {}, identity, `whatever`)
   t.deepEqual(messenger(d), `handrail: Expected assertion, wrongPath to be functions.`)
 })
 
-test(`guideRail should allow for multiple assertions at a single callsite`, (t) => {
+test(`guideRail should allow for multiple assertions at a single callsite`, () => {
   /*
   * @method guideRail
   * @param {functions[]} rails - an array of [assertion, failCase] pairs

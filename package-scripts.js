@@ -100,15 +100,11 @@ module.exports = {
       script: allNPS(`lint`, `test.covered`),
       covered: {
         description: `run covered tests`,
-        script: `nyc ava src/*.spec.js`
+        script: `jest src/*.spec.js --coverage --coveragePathIgnorePatterns test-helpers.js`
       },
       log: {
         description: `run tests and save logfile`,
-        script: `npm run test:covered > test-output.log`
-      },
-      readme: {
-        description: `run tests on the example that generates the README`,
-        script: `ava example.literate.js`
+        script: `nps test.covered > test-output.log`
       }
     },
     regenerate: {
