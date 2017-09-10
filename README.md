@@ -10,6 +10,8 @@ _NB: See this file in a runnable form here: [example.literate.js](https://cdn.ra
 
 ## Install
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/brekk/handrail.svg)](https://greenkeeper.io/)
+
     yarn add handrail -S
 
 or
