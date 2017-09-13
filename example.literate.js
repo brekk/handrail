@@ -23,7 +23,7 @@ npm i handrail -S
 
 Here's an all-in-one example where we can make an unsafe function safer while not modifying the original:
 
-```js
+```
 import {guideRail, fold} from 'handrail'
 import pipe from 'ramda/src/pipe'
 
@@ -262,4 +262,5 @@ const cashAndAgeSafeBartender2 = guideRail(
 -   [1.3.4](https://github.com/brekk/handrail/tree/v1.3.4) - swap to jest, update speeds
 
 ### API
+
  */

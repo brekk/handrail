@@ -1,11 +1,16 @@
 {
-  "sourceMaps": true,
-  "presets": ["es2015", "stage-2"],
+  "presets": ["es2015", "stage-2", "fbjs"],
   "plugins": [
     "transform-object-rest-spread",
     "transform-es2015-destructuring",
     "transform-async-to-generator",
     "syntax-async-functions",
-    ["transform-es2015-classes", {"loose": false}]
+    ["module-resolver", {
+      "root": ["./src"],
+      "alias": {
+        ".": "@app",
+        "./math": "@math"
+      }
+    }]
   ]
 }

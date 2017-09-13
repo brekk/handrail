@@ -9,19 +9,25 @@ import {t} from './test-helpers'
 
 /* eslint-disable fp/no-unused-expression */
 test(`judgement is just a structured pipe`, (done) => {
-  t.plan(3)
+  t.plan(4)
   t.is(typeof judgement, `function`)
   const input = `some input`
   const inputO = {
     law: (x) => {
+      // console.log(`xxxx`, x)
       t.is(x, input)
       return x
     },
     deliberation: (x) => {
+      // console.log(`yyyy`, x)
       t.is(x, input)
       return x
     },
-    jury: done,
+    jury: (x) => {
+      // console.log(`zzzz`, x)
+      t.is(x, input)
+      done()
+    },
     input
   }
   return judgement(inputO)
@@ -30,10 +36,16 @@ test(`judgement is just a structured pipe`, (done) => {
 const upper = e0(`toUpperCase`)
 const lower = e0(`toLowerCase`)
 
+const postForJudgment = ({k}) => ({k: lower(k)})
+const postForOther = map(lower)
+
 const testFn = (fn) => (done) => {
   t.plan(fn === judgeObject ? 3 : 4)
   t.is(typeof fn, `function`)
   const input = {k: `Some input with MIXED capitalization`}
+  const post = (
+    (fn === judgement) ? postForJudgment : postForOther
+  )
   const inputO = {
     law: (x) => {
       t.deepEqual(x, input)
@@ -44,11 +56,7 @@ const testFn = (fn) => (done) => {
       t.is(k, k.toUpperCase())
       return {k}
     },
-    post: (
-      fn === judgement ?
-      ({k}) => ({k: lower(k)}) :
-      (list) => map(lower, list)
-    ),
+    post,
     jury: (end) => {
       if (fn === judgement) {
         const {k} = end

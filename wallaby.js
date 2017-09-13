@@ -1,24 +1,35 @@
-module.exports = function runWallaby(wallaby) {
+const pkg = require(`./package.json`)
+module.exports = function configureWallaby(wallaby) {
   return {
+    name: pkg.name,
+    files: [
+      `src/**/*.js`,
+      `src/*.js`
+    ],
+
+    tests: [
+      `tests/**/*.spec.js`,
+      `tests/*.spec.js`
+    ],
+
+    env: {
+      type: `node`,
+      kind: `electron`
+    },
+
     compilers: {
       '**/*.js': wallaby.compilers.babel()
     },
-    debug: true,
-    env: {
-      runner: `node`,
-      type: `node`
-    },
-    files: [
-      `src/**/*.js`,
-      `!src/**/*.spec.js`
-    ],
 
-    setup: function setup() {
-      require(`babel-polyfill`) // eslint-disable-line
+    testFramework: `jest`,
+
+    setup: function setupWallaby() {
+      require(`babel-polyfill`) // eslint-disable-line fp/no-unused-expression
     },
-    testFramework: `ava`,
-    tests: [
-      `src/**/*.spec.js`
+
+    debug: true,
+    filesWithNoCoverageCalculated: [
+      // `src/core/fs.js`
     ]
   }
 }
