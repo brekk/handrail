@@ -1,6 +1,6 @@
 /* global test */
 import {I, map, pipe, reject, isFunction} from 'f-utility'
-import {t} from './test-helpers'
+import {t} from 'germs/lib/test-helpers'
 // import {trace} from 'xtrace'
 // import K from 'ramda/src/always'
 // import identity from 'ramda/src/identity'

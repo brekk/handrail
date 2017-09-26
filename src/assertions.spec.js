@@ -1,11 +1,11 @@
 /* global test */
 import {map} from 'f-utility'
 import {e0} from 'entrust'
+import {t} from 'germs/lib/test-helpers'
 import {
   judgement,
   judgeObject
 } from './assertions/judge-object'
-import {t} from './test-helpers'
 
 /* eslint-disable fp/no-unused-expression */
 test(`judgement is just a structured pipe`, (done) => {

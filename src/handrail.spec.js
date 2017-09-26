@@ -1,6 +1,6 @@
 /* global test */
 import {random, prop, K, curry, pipe, I as identity} from 'f-utility'
-import {t} from './test-helpers'
+import {t} from 'germs/lib/test-helpers'
 import {isEither} from './either/assert'
 import {
   Right,
