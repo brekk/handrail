@@ -1,6 +1,10 @@
 import {curry} from 'f-utility'
 
-const plural = (x) => x.length > 1 ? `s` : ``
+const plural = (x) => (
+  x.length > 1 ?
+    `s` :
+    ``
+)
 
 /**
  * @method expectFunctionProps

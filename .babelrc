@@ -6,6 +6,15 @@
     "transform-es2015-destructuring",
     "transform-async-to-generator",
     "syntax-async-functions",
-    ["transform-es2015-classes", {"loose": false}]
+    ["transform-es2015-classes", {"loose": false}],
+    ["module-resolver", {
+      "root": ["."],
+      "alias": {
+        "@handrail": "./src",
+        "@assertions": "./src/assertions",
+        "@either": "./src/either",
+        "@errors": "./src/errors"
+      }
+    }]
   ]
 }

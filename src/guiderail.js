@@ -1,6 +1,6 @@
 import {map, pipe, curry} from 'f-utility'
-import {rail} from './rail'
-import {multiRail} from './multirail'
+import {rail} from '@handrail/rail'
+import {multiRail} from '@handrail/multirail'
 
 /**
  * Encapsulate error states in a simple structure that returns a Left on error or Right on success

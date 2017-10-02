@@ -1,5 +1,5 @@
 import {chain, curry} from 'f-utility'
-import {rail} from './rail'
+import {rail} from '@handrail/rail'
 
 /**
  * `multiRail` is nearly-identical to `rail`, but should only be used if `rail` is already in use
