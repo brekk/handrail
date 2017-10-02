@@ -1,11 +1,11 @@
 import {map, pipe, K, I, curry, curryObjectK} from 'f-utility'
 
-import {rail} from './rail'
-import {multiRail} from './multirail'
-import {allPropsAreFunctions} from './assertions/all-props-are-functions'
-import {rejectNonFunctions} from './assertions/reject-non-functions'
-import {judgeObject} from './assertions/judge-object'
-import {expectFunctionProps} from './errors/expect-function-props'
+import {rail} from '@handrail/rail'
+import {multiRail} from '@handrail/multirail'
+import {allPropsAreFunctions} from '@assertions/all-props-are-functions'
+import {rejectNonFunctions} from '@assertions/reject-non-functions'
+import {judgeObject} from '@assertions/judge-object'
+import {expectFunctionProps} from '@errors/expect-function-props'
 
 /**
  * @method safeWarn

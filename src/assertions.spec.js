@@ -1,13 +1,32 @@
 /* global test */
 import {map} from 'f-utility'
 import {e0} from 'entrust'
-import {t} from 'germs/lib/test-helpers'
+import {t} from 'germs'
 import {
   judgement,
   judgeObject
-} from './assertions/judge-object'
+} from '@assertions/judge-object'
 
 /* eslint-disable fp/no-unused-expression */
+
+/*
+export const judgement = curryObjectK(
+  [`jury`, `law`, `input`],
+  ({
+    jury,
+    law,
+    input,
+    deliberation = I,
+    pre = I,
+    post = I
+  }) => pipe(
+    law,
+    pipe(pre, deliberation, post),
+    jury
+  )(input)
+)
+ */
+
 test(`judgement is just a structured pipe`, (done) => {
   t.plan(3)
   t.is(typeof judgement, `function`)
@@ -21,7 +40,7 @@ test(`judgement is just a structured pipe`, (done) => {
       t.is(x, input)
       return x
     },
-    jury: done,
+    jury: () => done(),
     input
   }
   return judgement(inputO)
@@ -46,8 +65,8 @@ const testFn = (fn) => (done) => {
     },
     post: (
       fn === judgement ?
-      ({k}) => ({k: lower(k)}) :
-      (list) => map(lower, list)
+        ({k}) => ({k: lower(k)}) :
+        (list) => map(lower, list)
     ),
     jury: (end) => {
       if (fn === judgement) {

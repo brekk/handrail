@@ -6,7 +6,7 @@ const {
   series
 } = utils
 
-module.exports = germs(name, {
+module.exports = germs.build(name, {
   readme: {
     description: `regenerate readme`,
     script: series(`nps readme.generate`, `nps readme.api`),

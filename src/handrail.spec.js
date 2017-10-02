@@ -1,7 +1,7 @@
 /* global test */
 import {random, prop, K, curry, pipe, I as identity} from 'f-utility'
-import {t} from 'germs/lib/test-helpers'
-import {isEither} from './either/assert'
+import {t} from 'germs'
+import {isEither} from '@either/assert'
 import {
   Right,
   Left,
@@ -10,7 +10,7 @@ import {
   handrail,
   fold,
   guideRail
-} from './index'
+} from '@handrail/index'
 
 // these implementations are daggy / fantasy-eithers specific
 const isRight = (x) => isEither(x) && x.r

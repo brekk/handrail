@@ -1,8 +1,8 @@
 import {curry, pipe} from 'f-utility'
-import {GuidedLeft} from './either/guided-left'
-import {GuidedRight} from './either/guided-right'
-import {expectFunctionProps} from './errors/expect-function-props'
-import {rejectNonFunctions} from './assertions/reject-non-functions'
+import {GuidedLeft} from '@either/guided-left'
+import {GuidedRight} from '@either/guided-right'
+import {expectFunctionProps} from '@errors/expect-function-props'
+import {rejectNonFunctions} from '@assertions/reject-non-functions'
 
 /**
  * @method safeRailInputs
@@ -43,8 +43,8 @@ export const rail = curry(
     }
     return (
       assertion(input) ?
-      GuidedRight :
-      pipe(wrongPath, GuidedLeft)
+        GuidedRight :
+        pipe(wrongPath, GuidedLeft)
     )(input)
   }
 )

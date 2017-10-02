@@ -21,7 +21,7 @@ module.exports = bundle({
     [`@errors`]: local(`../src/errors`)
   },
   output: {
-    file: `./${pkg.name}.js`,
-    format: `cjs`
+    file: `./${pkg.name}.mjs`,
+    format: `es`
   }
 })
