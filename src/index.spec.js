@@ -7,7 +7,8 @@ import {t} from 'germs'
 import * as X from './index'
 
 const {
-  Left
+  Left,
+  Right
 } = X
 
 const zort = (x) => x.sort() // eslint-disable-line fp/no-mutating-methods
@@ -73,7 +74,7 @@ test(`${HR} JSON.parse`, () => {
     JSON.parse
   )
   t.deepEqual(safeParse(``), Left(errorFunction(``)))
-  // t.deepEqual(safeParse(`{}`), Right({}))
+  t.deepEqual(safeParse(`{}`), Right({}))
 })
 
 test(`${HR} literate example`, () => {

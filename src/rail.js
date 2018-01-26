@@ -33,7 +33,7 @@ const safeRailInputs = pipe(
  * )(b)
  */
 export const rail = curry(
-  function ＸＸＸrail(assertion, wrongPath, input) {
+  function λrail(assertion, wrongPath, input) {
     if (input == null) {
       return GuidedLeft(new Error(`rail: Expected to be given non-null input.`))
     }

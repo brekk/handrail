@@ -23,7 +23,7 @@ import {rail} from '@handrail/rail'
  * )(b)
  */
 export const multiRail = curry(
-  function _multiRail(assertion, wrongPath, input) {
+  function λmultiRail(assertion, wrongPath, input) {
     return chain(
       rail(assertion, wrongPath),
       input

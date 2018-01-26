@@ -1,4 +1,4 @@
-import {map, pipe, K, keys, curry, curryObjectK} from 'f-utility'
+import {map, pipe, K, keys, curry, curryObjectN} from 'f-utility'
 import {rail} from '@handrail/rail'
 import {multiRail} from '@handrail/multirail'
 import {allPropsAreFunctions} from '@assertions/all-props-are-functions'
@@ -12,11 +12,15 @@ import {expectFunctionProps} from '@errors/expect-function-props'
  * @returns {*} any
  * @private
  */
-export const safeWarn = curry((scope, input) => pipe(
-  rejectNonFunctions,
-  keys,
-  expectFunctionProps(scope)
-)(input))
+export const safeWarn = curry(
+  function λsafeWarn(scope, input) {
+    return pipe(
+      rejectNonFunctions,
+      keys,
+      expectFunctionProps(scope)
+    )(input)
+  }
+)
 
 /**
  * @method internalRailSafety
@@ -25,12 +29,14 @@ export const safeWarn = curry((scope, input) => pipe(
  * @returns {GuidedLeft|GuidedRight} an Either
  * @private
  */
-const internalRailSafety = curryObjectK(
-  [`assertion`, `wrongPath`, `rightPath`],
-  (expectations) => rail(
-    K(allPropsAreFunctions(expectations)),
-    K(safeWarn(`handrail`, expectations))
-  )
+const internalRailSafety = curryObjectN(
+  3,
+  function λinternalRailSafety(expectations) {
+    return rail(
+      K(allPropsAreFunctions(expectations)),
+      K(safeWarn(`handrail`, expectations))
+    )
+  }
 )
 /**
  * @method handrail
@@ -42,12 +48,14 @@ const internalRailSafety = curryObjectK(
  * @public
  */
 export const handrail = curry(
-  (assertion, wrongPath, rightPath, input) => pipe(
-    // first prove we have good inputs
-    internalRailSafety({assertion, wrongPath, rightPath}),
-    // then use the functions to create a rail
-    multiRail(assertion, wrongPath),
-    // then modify your data if we're on the Right path
-    map(rightPath)
-  )(input)
+  function λhandrail(assertion, wrongPath, rightPath, input) {
+    return pipe(
+      // first prove we have good inputs
+      internalRailSafety({assertion, wrongPath, rightPath}),
+      // then use the functions to create a rail
+      multiRail(assertion, wrongPath),
+      // then modify your data if we're on the Right path
+      map(rightPath)
+    )(input)
+  }
 )
