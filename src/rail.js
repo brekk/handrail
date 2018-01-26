@@ -41,8 +41,9 @@ export const rail = curry(
     if (issues.length > 0) {
       return GuidedLeft(expectFunctionProps(`rail`, issues))
     }
+    const test = assertion(input)
     return (
-      assertion(input) ?
+      test ?
         GuidedRight :
         pipe(wrongPath, GuidedLeft)
     )(input)

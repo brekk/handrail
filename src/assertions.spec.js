@@ -4,8 +4,8 @@ import {e0} from 'entrust'
 import {t} from 'germs'
 import {
   judgement,
-  judgeObject
-} from '@assertions/judge-object'
+  allPropsAreFunctions
+} from '@assertions'
 
 /* eslint-disable fp/no-unused-expression */
 
@@ -50,7 +50,7 @@ const upper = e0(`toUpperCase`)
 const lower = e0(`toLowerCase`)
 
 const testFn = (fn) => (done) => {
-  t.plan(fn === judgeObject ? 3 : 4)
+  t.plan(4)
   t.is(typeof fn, `function`)
   const input = {k: `Some input with MIXED capitalization`}
   const inputO = {
@@ -88,11 +88,6 @@ test(
 )
 
 test(
-  `judgeObject is just a structured pipe (and pre and post are useful)`,
-  testFn(judgeObject)
-)
-
-test(
   `judgement's deliberation is identity by default`,
   (done) => {
     t.plan(3)
@@ -113,5 +108,12 @@ test(
     return judgement(inputO)
   }
 )
+
+test(`allPropsAreFunctions should return true for a given object who only has method props`, () => {
+  t.falsy(allPropsAreFunctions({}))
+  t.truthy(allPropsAreFunctions({a: () => {}}))
+  t.truthy(allPropsAreFunctions({a: () => {}, b: () => {}}))
+  t.falsy(allPropsAreFunctions({a: () => {}, b: () => {}, c: false}))
+})
 
 /* eslint-enable fp/no-unused-expression */

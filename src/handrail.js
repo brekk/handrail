@@ -1,10 +1,8 @@
-import {map, pipe, K, I, curry, curryObjectK} from 'f-utility'
-
+import {map, pipe, K, keys, curry, curryObjectK} from 'f-utility'
 import {rail} from '@handrail/rail'
 import {multiRail} from '@handrail/multirail'
 import {allPropsAreFunctions} from '@assertions/all-props-are-functions'
 import {rejectNonFunctions} from '@assertions/reject-non-functions'
-import {judgeObject} from '@assertions/judge-object'
 import {expectFunctionProps} from '@errors/expect-function-props'
 
 /**
@@ -14,12 +12,11 @@ import {expectFunctionProps} from '@errors/expect-function-props'
  * @returns {*} any
  * @private
  */
-const safeWarn = curry((scope, input) => judgeObject({
-  deliberation: I,
-  jury: expectFunctionProps(scope),
-  law: rejectNonFunctions,
-  input
-}))
+export const safeWarn = curry((scope, input) => pipe(
+  rejectNonFunctions,
+  keys,
+  expectFunctionProps(scope)
+)(input))
 
 /**
  * @method internalRailSafety

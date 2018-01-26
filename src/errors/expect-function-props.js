@@ -13,6 +13,8 @@ const plural = (x) => (
  * @returns {Error} an error
  * @private
  */
-export const expectFunctionProps = curry((scope, errors) => (
-  new Error(`${scope}: Expected ${errors.join(`, `)} to be function${plural(errors)}.`)
-))
+export const expectFunctionProps = curry(
+  (scope, errors) => (
+    new Error(`${scope}: Expected ${errors.join(`, `)} to be function${plural(errors)}.`)
+  )
+)

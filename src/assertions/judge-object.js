@@ -3,33 +3,17 @@ import {I, curryObjectK, pipe} from 'f-utility'
 export const judgement = curryObjectK(
   [`jury`, `law`, `input`],
   ({
-    jury,
-    law,
     input,
-    deliberation = I,
+    law,
     pre = I,
-    post = I
+    deliberation = I,
+    post = I,
+    jury
   }) => pipe(
     law,
-    pipe(pre, deliberation, post),
+    pre,
+    deliberation,
+    post,
     jury
   )(input)
-)
-
-export const judgeObject = curryObjectK(
-  [`jury`, `law`, `input`],
-  ({
-    jury,
-    law,
-    input,
-    pre = I,
-    post = I
-  }) => judgement({
-    deliberation: Object.keys,
-    pre,
-    post,
-    jury,
-    law,
-    input
-  })
 )
