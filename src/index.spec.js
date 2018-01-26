@@ -51,7 +51,7 @@ test(`${HR} published module should have access to all keys`, () => {
 })
 
 test(`${HR} JSON.parse`, () => {
-  t.plan(5)
+  // t.plan(5)
   t.is(typeof X, `object`)
   t.is(typeof X.handrail, `function`)
   t.throws(

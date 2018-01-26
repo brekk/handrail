@@ -29,7 +29,7 @@ import {multiRail} from '@handrail/multirail'
  * )
  */
 export const guideRail = curry(
-  (rails, goodPath, input) => {
+  function λguideRail(rails, goodPath, input) {
     const multiMap = ([a, w]) => multiRail(a, w)
     const [first, ...rest] = rails // eslint-disable-line fp/no-rest-parameters
     const [firstAssertion, wrongPath] = first

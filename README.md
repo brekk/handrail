@@ -265,9 +265,9 @@ const cashAndAgeSafeBartender2 = guideRail(
 
 **Parameters**
 
--   `assertion` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** a function to test the input with
--   `wrongPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** a function to prepare data before it passes into the Left path
--   `rightPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** a function to modify after it passes into the Right path
+-   `assertion` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** a function to test the input with
+-   `wrongPath` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** a function to prepare data before it passes into the Left path
+-   `rightPath` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** a function to modify after it passes into the Right path
 -   `input` **any** any input
 
 Returns **(GuidedLeft | GuidedRight)** an Either
@@ -278,8 +278,8 @@ Add safety to your pipelines!
 
 **Parameters**
 
--   `assertion` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** boolean-returning function
--   `wrongPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** function invoked if the inputs are bad
+-   `assertion` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** boolean-returning function
+-   `wrongPath` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** function invoked if the inputs are bad
 -   `input` **any** any input
 
 **Examples**
@@ -304,8 +304,8 @@ probably use `guideRail` instead.
 
 **Parameters**
 
--   `assertion` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** boolean-returning function
--   `wrongPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** function invoked if the inputs are bad
+-   `assertion` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** boolean-returning function
+-   `wrongPath` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** function invoked if the inputs are bad
 -   `input` **any** any input
 
 **Examples**
@@ -330,8 +330,8 @@ Encapsulate error states in a simple structure that returns a Left on error or R
 
 **Parameters**
 
--   `rails` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;functions>** an array of [assertion, failCase] pairs
--   `goodPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** what to do if things go well
+-   `rails` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;functions>** an array of [assertion, failCase] pairs
+-   `goodPath` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** what to do if things go well
 -   `input` **any** whatever
 
 **Examples**
@@ -362,8 +362,8 @@ Returns **(GuidedLeft | GuidedRight)** an Either
 
 **Parameters**
 
--   `leftPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** do something if function receives a Left
--   `rightPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** do something if function receives a Right
+-   `leftPath` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** do something if function receives a Left
+-   `rightPath` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** do something if function receives a Right
 -   `either` **Either** either a Left or a Right
 
 Returns **Either** the original Either, mapped over, but like, with handed-ness
@@ -372,8 +372,8 @@ Returns **Either** the original Either, mapped over, but like, with handed-ness
 
 **Parameters**
 
--   `leftPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** do something if function receives a Left
--   `rightPath` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** do something if function receives a Right
+-   `leftPath` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** do something if function receives a Left
+-   `rightPath` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** do something if function receives a Right
 -   `either` **Either** either a Left or a Right
 
 Returns **any** the value from within an Either, pulled out of the monadic box

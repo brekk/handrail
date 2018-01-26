@@ -104,10 +104,9 @@
     "xtrace": "0.1.2"
   },
   "dependencies": {
-    "entrust": "0.0.10",
-    "f-utility": "3.3.3",
-    "fantasy-eithers": "^0.0.2",
-    "katsu-curry": "0.4.0"
+    "entrust": "^0.0.17",
+    "f-utility": "^3.5.2",
+    "fantasy-eithers": "^0.0.2"
   },
   "scripts": {
     "help!": "nps",
