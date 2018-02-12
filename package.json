@@ -104,8 +104,8 @@
     "xtrace": "0.1.2"
   },
   "dependencies": {
-    "entrust": "^0.0.17",
-    "f-utility": "^3.5.2",
+    "entrust": "^0.0.18",
+    "f-utility": "^3.5.5",
     "fantasy-eithers": "^0.0.2"
   },
   "scripts": {
