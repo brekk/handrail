@@ -2984,11 +2984,11 @@ entrust@0.0.7:
   dependencies:
     katsu-curry "^0.4.0"
 
-entrust@^0.0.17:
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/entrust/-/entrust-0.0.17.tgz#1ae4af47e789c8f6f0ccb41c26d80870ef8605af"
+entrust@^0.0.18:
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/entrust/-/entrust-0.0.18.tgz#b8706662568e2b55f0c605dcce4eb479c2bd056d"
   dependencies:
-    katsu-curry "^0.7.1"
+    katsu-curry "^0.7.4"
 
 errno@^0.1.3, errno@^0.1.4:
   version "0.1.6"
@@ -3467,15 +3467,15 @@ f-utility@^1.0.4:
     folktale "^1.0.0-SNAPSHOT"
     lodash "^4.15.0"
 
-f-utility@^3.5.2:
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/f-utility/-/f-utility-3.5.2.tgz#d3d7a3353aa6226ba355b2e91635088c7e5f2ea3"
+f-utility@^3.5.5:
+  version "3.5.5"
+  resolved "https://registry.yarnpkg.com/f-utility/-/f-utility-3.5.5.tgz#c22d09113e0a502c57cea03351668d38fae2e71e"
   dependencies:
-    entrust "^0.0.17"
+    entrust "^0.0.18"
     fantasy-land "3.4.0"
     fast.js "^0.1.1"
     flatmap-fast "^3.0.0"
-    katsu-curry "^0.7.1"
+    katsu-curry "^0.7.4"
 
 fantasy-combinators@0.0.1, fantasy-combinators@0.0.x:
   version "0.0.1"
@@ -5397,9 +5397,9 @@ katsu-curry@^0.4.0:
   dependencies:
     fast.js "^0.1.1"
 
-katsu-curry@^0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/katsu-curry/-/katsu-curry-0.7.1.tgz#dd76a5eeede3f9130d91fb11bf81183a442ea2ac"
+katsu-curry@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/katsu-curry/-/katsu-curry-0.7.4.tgz#9725dffa05018464902bfc0e27726d873c46757f"
   dependencies:
     fast.js "^0.1.1"
 
