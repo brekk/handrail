@@ -2,11 +2,12 @@ const germs = require(`germs`)
 const {name} = require(`./package.json`)
 
 const utils = require(`nps-utils`)
+const allNPS = utils.concurrent.nps
 const {
   series
 } = utils
 
-module.exports = germs.build(name, {
+const GERMS = germs.build(name, {
   readme: {
     description: `regenerate readme`,
     script: series(`nps readme.generate`, `nps readme.api`),
@@ -20,3 +21,12 @@ module.exports = germs.build(name, {
     }
   }
 })
+
+GERMS.scripts.lint.project = `clinton`
+GERMS.scripts.lint = Object.assign(
+  {},
+  GERMS.scripts.lint,
+  {script: allNPS(`lint.src`, `lint.jsdoc`, `lint.project`)}
+)
+
+module.exports = GERMS

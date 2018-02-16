@@ -3468,8 +3468,8 @@ f-utility@^1.0.4:
     lodash "^4.15.0"
 
 f-utility@^3.5.5:
-  version "3.5.5"
-  resolved "https://registry.yarnpkg.com/f-utility/-/f-utility-3.5.5.tgz#c22d09113e0a502c57cea03351668d38fae2e71e"
+  version "3.5.6"
+  resolved "https://registry.yarnpkg.com/f-utility/-/f-utility-3.5.6.tgz#d0d9963a07cc9dfb4a45edf9d08f9f8f81a0db01"
   dependencies:
     entrust "^0.0.18"
     fantasy-land "3.4.0"
@@ -5398,8 +5398,8 @@ katsu-curry@^0.4.0:
     fast.js "^0.1.1"
 
 katsu-curry@^0.7.4:
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/katsu-curry/-/katsu-curry-0.7.4.tgz#9725dffa05018464902bfc0e27726d873c46757f"
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/katsu-curry/-/katsu-curry-0.7.5.tgz#a738fd489f65d1fc452b710ad51417344547f9f2"
   dependencies:
     fast.js "^0.1.1"
 
@@ -7384,8 +7384,8 @@ rollup-plugin-json@2.3.0, rollup-plugin-json@^2.1.0:
     rollup-pluginutils "^2.0.1"
 
 rollup-plugin-node-resolve@^3.0.0:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-node-resolve/-/rollup-plugin-node-resolve-3.0.2.tgz#38babc12fd404cc2ba1ff68648fe43fa3ffee6b0"
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-node-resolve/-/rollup-plugin-node-resolve-3.0.3.tgz#8f57b253edd00e5b0ad0aed7b7e9cf5982e98fa4"
   dependencies:
     builtin-modules "^1.1.0"
     is-module "^1.0.0"
