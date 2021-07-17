@@ -1,39 +1,48 @@
-import resolve from "@rollup/plugin-node-resolve"
-import commonjs from "@rollup/plugin-commonjs"
-import json from "@rollup/plugin-json"
+import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
+import json from '@rollup/plugin-json'
+import { map } from 'ramda'
 // import shebang from 'rollup-plugin-add-shebang'
-import pkg from "./package.json"
+import pkg from './package.json'
 
 const external = (pkg && pkg.dependencies
   ? Object.keys(pkg.dependencies)
   : []
 ).concat([`path`])
 
-const plugins = [json(), resolve({ preferBuiltins: true }), commonjs()]
-
-export default [
-  {
-    input: `src/index.js`,
-    external,
-    output: [{ file: pkg.main, format: `cjs` }],
-    plugins,
-  },
-  {
-    input: `src/index.js`,
-    external,
-    output: [{ file: "handrail.mjs", format: `esm` }],
-    plugins,
-  },
-  {
-    input: `src/debug.js`,
-    external,
-    output: [{ file: "debug.js", format: `cjs` }],
-    plugins,
-  },
-  {
-    input: `src/debug.js`,
-    external,
-    output: [{ file: "debug.mjs", format: `esm` }],
-    plugins,
-  },
+const plugins = [
+  json(),
+  resolve({ preferBuiltins: true }),
+  commonjs()
 ]
+
+const build = ({ input, file, format }) => ({
+  input,
+  external,
+  output: [{ file, format }],
+  plugins
+})
+
+export default map(build, [
+  {
+    input: `src/index.js`,
+    file: pkg.main,
+    format: `cjs`
+  },
+  {
+    input: `src/index.js`,
+    file: 'handrail.mjs',
+    format: `esm`
+  },
+  {
+    input: `src/debug.js`,
+    external,
+    file: 'debug.js',
+    format: `cjs`
+  },
+  {
+    input: `src/debug.js`,
+    file: 'debug.mjs',
+    format: `esm`
+  }
+])
