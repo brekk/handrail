@@ -8,7 +8,7 @@ import {
 } from './debug'
 import { handrail, rail, guideRail, multiRail } from './index'
 
-const { riptest, same, shared } = hook()
+const { riptest, same } = hook()
 
 describe('rail', () => {
   const notANumber = 'no number whatsoever'

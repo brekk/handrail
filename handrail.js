@@ -51,6 +51,24 @@ const guideRail = ramda.curry(function guideRail(
   )(input)
 });
 
+const isFunction = ramda.is(Function);
+
+ramda.curry(function _expectFunction([
+  name,
+  f
+]) {
+  return ramda.ifElse(isFunction, ramda.always(false), ramda.always(name))(f)
+});
+
+const bimap = ramda.curry(function _bimap(f, g, x) {
+  return x.bimap(f, g)
+});
+const fold = ramda.curry(function _fold(f, g, x) {
+  return x.fold(f, g)
+});
+
+exports.bimap = bimap;
+exports.fold = fold;
 exports.guideRail = guideRail;
 exports.handrail = handrail;
 exports.multiRail = multiRail;

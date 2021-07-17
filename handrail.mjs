@@ -1,5 +1,5 @@
 import Either from 'easy-street';
-import { curry, ifElse, pipe, chain, map, apply } from 'ramda';
+import { curry, ifElse, pipe, chain, map, apply, is, always } from 'ramda';
 
 const rail = curry(function _rail(condition, badPath, input) {
   return ifElse(
@@ -43,4 +43,20 @@ const guideRail = curry(function guideRail(
   )(input)
 });
 
-export { guideRail, handrail, multiRail, rail };
+const isFunction = is(Function);
+
+curry(function _expectFunction([
+  name,
+  f
+]) {
+  return ifElse(isFunction, always(false), always(name))(f)
+});
+
+const bimap = curry(function _bimap(f, g, x) {
+  return x.bimap(f, g)
+});
+const fold = curry(function _fold(f, g, x) {
+  return x.fold(f, g)
+});
+
+export { bimap, fold, guideRail, handrail, multiRail, rail };

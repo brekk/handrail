@@ -1,5 +1,5 @@
 extends: sorcerers
 rules:
   no-unused-vars:
-  - 0
+  - 2
   - varsIgnorePattern: _

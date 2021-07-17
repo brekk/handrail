@@ -1,16 +1,4 @@
-import Either from 'easy-street'
-import {
-  curry,
-  ifElse,
-  is,
-  join,
-  map,
-  pipe,
-  reject,
-  toPairs,
-  when,
-  always as K
-} from 'ramda'
+import { curry, ifElse, is, always as K } from 'ramda'
 
 export const isFunction = is(Function)
 
@@ -19,4 +7,11 @@ export const expectFunction = curry(function _expectFunction([
   f
 ]) {
   return ifElse(isFunction, K(false), K(name))(f)
+})
+
+export const bimap = curry(function _bimap(f, g, x) {
+  return x.bimap(f, g)
+})
+export const fold = curry(function _fold(f, g, x) {
+  return x.fold(f, g)
 })

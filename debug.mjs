@@ -10,6 +10,13 @@ const expectFunction = curry(function _expectFunction([
   return ifElse(isFunction, always(false), always(name))(f)
 });
 
+const bimap = curry(function _bimap(f, g, x) {
+  return x.bimap(f, g)
+});
+const fold = curry(function _fold(f, g, x) {
+  return x.fold(f, g)
+});
+
 const rail$1 = curry(function _rail(condition, badPath, input) {
   return ifElse(
     condition,
@@ -125,4 +132,4 @@ const guideRail = curry(function _safetyGuideRail(
   )(input)
 });
 
-export { guideRail, handrail, multiRail, rail };
+export { bimap, fold, guideRail, handrail, multiRail, rail };
