@@ -1,2 +1,2 @@
 export { rail, multiRail, handrail, guideRail } from './handrail'
-export { fold, bimap } from './utils'
+export { map, chain, isEither, fold, bimap } from './utils'

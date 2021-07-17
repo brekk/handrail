@@ -1,6 +1,6 @@
 {
   "name": "handrail",
-  "version": "1.4.0",
+  "version": "1.4.0-alpha.1",
   "description": "a toolset for logical disjunctions / safety for your functional pipelines",
   "license": "ISC",
   "repository": "brekk/handrail",

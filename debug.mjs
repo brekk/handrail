@@ -1,5 +1,11 @@
 import Either from 'easy-street';
-import { is, curry, ifElse, always, pipe, chain, map, apply, toPairs, filter, identity, join, includes, values, any, complement, concat, __ } from 'ramda';
+import { either, propEq, is, curry, ifElse, always, pipe, chain, map, apply, toPairs, filter, identity, join, includes, values, any, complement, concat, __ } from 'ramda';
+export { chain, map } from 'ramda';
+
+const isEither = either(
+  propEq('isLeft', true),
+  propEq('isRight', true)
+);
 
 const isFunction = is(Function);
 
@@ -132,4 +138,4 @@ const guideRail = curry(function _safetyGuideRail(
   )(input)
 });
 
-export { bimap, fold, guideRail, handrail, multiRail, rail };
+export { bimap, fold, guideRail, handrail, isEither, multiRail, rail };

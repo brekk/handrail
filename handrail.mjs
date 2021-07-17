@@ -1,5 +1,6 @@
 import Either from 'easy-street';
-import { curry, ifElse, pipe, chain, map, apply, is, always } from 'ramda';
+import { curry, ifElse, pipe, chain, map, apply, either, propEq, is, always } from 'ramda';
+export { chain, map } from 'ramda';
 
 const rail = curry(function _rail(condition, badPath, input) {
   return ifElse(
@@ -43,6 +44,11 @@ const guideRail = curry(function guideRail(
   )(input)
 });
 
+const isEither = either(
+  propEq('isLeft', true),
+  propEq('isRight', true)
+);
+
 const isFunction = is(Function);
 
 curry(function _expectFunction([
@@ -59,4 +65,4 @@ const fold = curry(function _fold(f, g, x) {
   return x.fold(f, g)
 });
 
-export { bimap, fold, guideRail, handrail, multiRail, rail };
+export { bimap, fold, guideRail, handrail, isEither, multiRail, rail };

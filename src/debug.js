@@ -18,7 +18,7 @@ import {
 } from 'ramda'
 import { isFunction, expectFunction } from './utils'
 import { rail as __rail, multiRail as __multiRail } from './index'
-export { bimap, fold } from './utils'
+export { map, chain, isEither, fold, bimap } from './utils'
 
 const joint = ' and '
 

@@ -51,6 +51,11 @@ const guideRail = ramda.curry(function guideRail(
   )(input)
 });
 
+const isEither = ramda.either(
+  ramda.propEq('isLeft', true),
+  ramda.propEq('isRight', true)
+);
+
 const isFunction = ramda.is(Function);
 
 ramda.curry(function _expectFunction([
@@ -67,9 +72,22 @@ const fold = ramda.curry(function _fold(f, g, x) {
   return x.fold(f, g)
 });
 
+Object.defineProperty(exports, 'chain', {
+  enumerable: true,
+  get: function () {
+    return ramda.chain;
+  }
+});
+Object.defineProperty(exports, 'map', {
+  enumerable: true,
+  get: function () {
+    return ramda.map;
+  }
+});
 exports.bimap = bimap;
 exports.fold = fold;
 exports.guideRail = guideRail;
 exports.handrail = handrail;
+exports.isEither = isEither;
 exports.multiRail = multiRail;
 exports.rail = rail;

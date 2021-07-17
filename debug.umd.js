@@ -2289,6 +2289,72 @@
   });
 
   /**
+   * Returns `true` if one or both of its arguments are `true`. Returns `false`
+   * if both arguments are `false`.
+   *
+   * @func
+   * @memberOf R
+   * @since v0.1.0
+   * @category Logic
+   * @sig a -> b -> a | b
+   * @param {Any} a
+   * @param {Any} b
+   * @return {Any} the first argument if truthy, otherwise the second argument.
+   * @see R.either, R.xor
+   * @example
+   *
+   *      R.or(true, true); //=> true
+   *      R.or(true, false); //=> true
+   *      R.or(false, true); //=> true
+   *      R.or(false, false); //=> false
+   */
+
+  var or =
+  /*#__PURE__*/
+  _curry2(function or(a, b) {
+    return a || b;
+  });
+
+  /**
+   * A function wrapping calls to the two functions in an `||` operation,
+   * returning the result of the first function if it is truth-y and the result
+   * of the second function otherwise. Note that this is short-circuited,
+   * meaning that the second function will not be invoked if the first returns a
+   * truth-y value.
+   *
+   * In addition to functions, `R.either` also accepts any fantasy-land compatible
+   * applicative functor.
+   *
+   * @func
+   * @memberOf R
+   * @since v0.12.0
+   * @category Logic
+   * @sig (*... -> Boolean) -> (*... -> Boolean) -> (*... -> Boolean)
+   * @param {Function} f a predicate
+   * @param {Function} g another predicate
+   * @return {Function} a function that applies its arguments to `f` and `g` and `||`s their outputs together.
+   * @see R.or
+   * @example
+   *
+   *      const gt10 = x => x > 10;
+   *      const even = x => x % 2 === 0;
+   *      const f = R.either(gt10, even);
+   *      f(101); //=> true
+   *      f(8); //=> true
+   *
+   *      R.either(Maybe.Just(false), Maybe.Just(55)); // => Maybe.Just(55)
+   *      R.either([false, false, 'a'], [11]) // => [11, 11, "a"]
+   */
+
+  var either =
+  /*#__PURE__*/
+  _curry2(function either(f, g) {
+    return _isFunction(f) ? function _either() {
+      return f.apply(this, arguments) || g.apply(this, arguments);
+    } : lift(or)(f, g);
+  });
+
+  /**
    * Creates a function that will process either the `onTrue` or the `onFalse`
    * function depending upon the result of the `condition` predicate.
    *
@@ -2453,6 +2519,38 @@
   invoker(1, 'join');
 
   /**
+   * Returns `true` if the specified object property is equal, in
+   * [`R.equals`](#equals) terms, to the given value; `false` otherwise.
+   * You can test multiple properties with [`R.whereEq`](#whereEq).
+   *
+   * @func
+   * @memberOf R
+   * @since v0.1.0
+   * @category Relation
+   * @sig String -> a -> Object -> Boolean
+   * @param {String} name
+   * @param {*} val
+   * @param {*} obj
+   * @return {Boolean}
+   * @see R.whereEq, R.propSatisfies, R.equals
+   * @example
+   *
+   *      const abby = {name: 'Abby', age: 7, hair: 'blond'};
+   *      const fred = {name: 'Fred', age: 12, hair: 'brown'};
+   *      const rusty = {name: 'Rusty', age: 10, hair: 'brown'};
+   *      const alois = {name: 'Alois', age: 15, disposition: 'surly'};
+   *      const kids = [abby, fred, rusty, alois];
+   *      const hasBrownHair = R.propEq('hair', 'brown');
+   *      R.filter(hasBrownHair, kids); //=> [fred, rusty]
+   */
+
+  var propEq =
+  /*#__PURE__*/
+  _curry3(function propEq(name, val, obj) {
+    return equals(val, obj[name]);
+  });
+
+  /**
    * Converts an object into an array of key, value arrays. Only the object's
    * own properties are used.
    * Note that the order of the output array is not guaranteed to be consistent
@@ -2484,6 +2582,11 @@
 
     return pairs;
   });
+
+  const isEither = either(
+    propEq('isLeft', true),
+    propEq('isRight', true)
+  );
 
   const isFunction = is(Function);
 
@@ -2617,9 +2720,12 @@
   });
 
   exports.bimap = bimap;
+  exports.chain = chain;
   exports.fold = fold;
   exports.guideRail = guideRail;
   exports.handrail = handrail;
+  exports.isEither = isEither;
+  exports.map = map;
   exports.multiRail = multiRail;
   exports.rail = rail;
 

@@ -9,6 +9,11 @@ function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'defau
 
 var Either__default = /*#__PURE__*/_interopDefaultLegacy(Either);
 
+const isEither = ramda.either(
+  ramda.propEq('isLeft', true),
+  ramda.propEq('isRight', true)
+);
+
 const isFunction = ramda.is(Function);
 
 const expectFunction = ramda.curry(function _expectFunction([
@@ -140,9 +145,22 @@ const guideRail = ramda.curry(function _safetyGuideRail(
   )(input)
 });
 
+Object.defineProperty(exports, 'chain', {
+  enumerable: true,
+  get: function () {
+    return ramda.chain;
+  }
+});
+Object.defineProperty(exports, 'map', {
+  enumerable: true,
+  get: function () {
+    return ramda.map;
+  }
+});
 exports.bimap = bimap;
 exports.fold = fold;
 exports.guideRail = guideRail;
 exports.handrail = handrail;
+exports.isEither = isEither;
 exports.multiRail = multiRail;
 exports.rail = rail;

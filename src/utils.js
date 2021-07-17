@@ -1,4 +1,10 @@
-import { curry, ifElse, is, always as K } from 'ramda'
+import { curry, propEq, either, ifElse, is, always as K } from 'ramda'
+export { map, chain } from 'ramda'
+
+export const isEither = either(
+  propEq('isLeft', true),
+  propEq('isRight', true)
+)
 
 export const isFunction = is(Function)
 

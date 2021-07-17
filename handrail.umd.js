@@ -20,7 +20,7 @@
     const lessThanOrEqualTo = delegatedMethod('lte', x, y);
     return lessThanOrEqualTo || x <= y
   }
-  function equals(x, y) {
+  function equals$1(x, y) {
     const equal = delegatedMethod('equals', x, y);
     return equal || x === y
   }
@@ -150,10 +150,10 @@
   };
 
   Left.prototype.equals = function lEquals(other) {
-    return other.isLeft && equals(this.value, other.value)
+    return other.isLeft && equals$1(this.value, other.value)
   };
   Right.prototype.equals = function rEquals(other) {
-    return other.isRight && equals(this.value, other.value)
+    return other.isRight && equals$1(this.value, other.value)
   };
 
   const leftAliaser = aliasFor(Left.prototype);
@@ -223,6 +223,41 @@
           }) : fn(a, b);
       }
     };
+  }
+
+  /**
+   * Private `concat` function to merge two array-like objects.
+   *
+   * @private
+   * @param {Array|Arguments} [set1=[]] An array-like object.
+   * @param {Array|Arguments} [set2=[]] An array-like object.
+   * @return {Array} A new, merged array.
+   * @example
+   *
+   *      _concat([4, 5, 6], [1, 2, 3]); //=> [4, 5, 6, 1, 2, 3]
+   */
+  function _concat(set1, set2) {
+    set1 = set1 || [];
+    set2 = set2 || [];
+    var idx;
+    var len1 = set1.length;
+    var len2 = set2.length;
+    var result = [];
+    idx = 0;
+
+    while (idx < len1) {
+      result[result.length] = set1[idx];
+      idx += 1;
+    }
+
+    idx = 0;
+
+    while (idx < len2) {
+      result[result.length] = set2[idx];
+      idx += 1;
+    }
+
+    return result;
   }
 
   function _arity(n, fn) {
@@ -961,6 +996,43 @@
   });
 
   /**
+   * ap applies a list of functions to a list of values.
+   *
+   * Dispatches to the `ap` method of the second argument, if present. Also
+   * treats curried functions as applicatives.
+   *
+   * @func
+   * @memberOf R
+   * @since v0.3.0
+   * @category Function
+   * @sig [a -> b] -> [a] -> [b]
+   * @sig Apply f => f (a -> b) -> f a -> f b
+   * @sig (r -> a -> b) -> (r -> a) -> (r -> b)
+   * @param {*} applyF
+   * @param {*} applyX
+   * @return {*}
+   * @example
+   *
+   *      R.ap([R.multiply(2), R.add(3)], [1,2,3]); //=> [2, 4, 6, 4, 5, 6]
+   *      R.ap([R.concat('tasty '), R.toUpper], ['pizza', 'salad']); //=> ["tasty pizza", "tasty salad", "PIZZA", "SALAD"]
+   *
+   *      // R.ap can also be used as S combinator
+   *      // when only two functions are passed
+   *      R.ap(R.concat, R.toUpper)('Ramda') //=> 'RamdaRAMDA'
+   * @symb R.ap([f, g], [a, b]) = [f(a), f(b), g(a), g(b)]
+   */
+
+  var ap =
+  /*#__PURE__*/
+  _curry2(function ap(applyF, applyX) {
+    return typeof applyX['fantasy-land/ap'] === 'function' ? applyX['fantasy-land/ap'](applyF) : typeof applyF.ap === 'function' ? applyF.ap(applyX) : typeof applyF === 'function' ? function (x) {
+      return applyF(x)(applyX(x));
+    } : _reduce(function (acc, f) {
+      return _concat(acc, map(f, applyX));
+    }, [], applyF);
+  });
+
+  /**
    * Applies function `fn` to the argument list `args`. This is useful for
    * creating a fixed-arity function from a variadic function. `fn` should be a
    * bound function if context is significant.
@@ -985,6 +1057,67 @@
   /*#__PURE__*/
   _curry2(function apply(fn, args) {
     return fn.apply(this, args);
+  });
+
+  function _isFunction(x) {
+    var type = Object.prototype.toString.call(x);
+    return type === '[object Function]' || type === '[object AsyncFunction]' || type === '[object GeneratorFunction]' || type === '[object AsyncGeneratorFunction]';
+  }
+
+  /**
+   * "lifts" a function to be the specified arity, so that it may "map over" that
+   * many lists, Functions or other objects that satisfy the [FantasyLand Apply spec](https://github.com/fantasyland/fantasy-land#apply).
+   *
+   * @func
+   * @memberOf R
+   * @since v0.7.0
+   * @category Function
+   * @sig Number -> (*... -> *) -> ([*]... -> [*])
+   * @param {Function} fn The function to lift into higher context
+   * @return {Function} The lifted function.
+   * @see R.lift, R.ap
+   * @example
+   *
+   *      const madd3 = R.liftN(3, (...args) => R.sum(args));
+   *      madd3([1,2,3], [1,2,3], [1]); //=> [3, 4, 5, 4, 5, 6, 5, 6, 7]
+   */
+
+  var liftN =
+  /*#__PURE__*/
+  _curry2(function liftN(arity, fn) {
+    var lifted = curryN(arity, fn);
+    return curryN(arity, function () {
+      return _reduce(ap, map(lifted, arguments[0]), Array.prototype.slice.call(arguments, 1));
+    });
+  });
+
+  /**
+   * "lifts" a function of arity > 1 so that it may "map over" a list, Function or other
+   * object that satisfies the [FantasyLand Apply spec](https://github.com/fantasyland/fantasy-land#apply).
+   *
+   * @func
+   * @memberOf R
+   * @since v0.7.0
+   * @category Function
+   * @sig (*... -> *) -> ([*]... -> [*])
+   * @param {Function} fn The function to lift into higher context
+   * @return {Function} The lifted function.
+   * @see R.liftN
+   * @example
+   *
+   *      const madd3 = R.lift((a, b, c) => a + b + c);
+   *
+   *      madd3([1,2,3], [1,2,3], [1]); //=> [3, 4, 5, 4, 5, 6, 5, 6, 7]
+   *
+   *      const madd5 = R.lift((a, b, c, d, e) => a + b + c + d + e);
+   *
+   *      madd5([1,2], [3], [4, 5], [6], [7, 8]); //=> [21, 22, 22, 23, 22, 23, 23, 24]
+   */
+
+  var lift =
+  /*#__PURE__*/
+  _curry1(function lift(fn) {
+    return liftN(fn.length, fn);
   });
 
   /**
@@ -1150,6 +1283,38 @@
     return _makeFlat(false)(map(fn, monad));
   }));
 
+  /**
+   * Gives a single-word string description of the (native) type of a value,
+   * returning such answers as 'Object', 'Number', 'Array', or 'Null'. Does not
+   * attempt to distinguish user Object types any further, reporting them all as
+   * 'Object'.
+   *
+   * @func
+   * @memberOf R
+   * @since v0.8.0
+   * @category Type
+   * @sig (* -> {*}) -> String
+   * @param {*} val The value to test
+   * @return {String}
+   * @example
+   *
+   *      R.type({}); //=> "Object"
+   *      R.type(1); //=> "Number"
+   *      R.type(false); //=> "Boolean"
+   *      R.type('s'); //=> "String"
+   *      R.type(null); //=> "Null"
+   *      R.type([]); //=> "Array"
+   *      R.type(/[A-z]/); //=> "RegExp"
+   *      R.type(() => {}); //=> "Function"
+   *      R.type(undefined); //=> "Undefined"
+   */
+
+  var type =
+  /*#__PURE__*/
+  _curry1(function type(val) {
+    return val === null ? 'Null' : val === undefined ? 'Undefined' : Object.prototype.toString.call(val).slice(8, -1);
+  });
+
   function _pipe(f, g) {
     return function () {
       return g.call(this, f.apply(this, arguments));
@@ -1281,6 +1446,311 @@
     return _arity(arguments[0].length, reduce(_pipe, arguments[0], tail(arguments)));
   }
 
+  function _arrayFromIterator(iter) {
+    var list = [];
+    var next;
+
+    while (!(next = iter.next()).done) {
+      list.push(next.value);
+    }
+
+    return list;
+  }
+
+  function _includesWith(pred, x, list) {
+    var idx = 0;
+    var len = list.length;
+
+    while (idx < len) {
+      if (pred(x, list[idx])) {
+        return true;
+      }
+
+      idx += 1;
+    }
+
+    return false;
+  }
+
+  function _functionName(f) {
+    // String(x => x) evaluates to "x => x", so the pattern may not match.
+    var match = String(f).match(/^function (\w*)/);
+    return match == null ? '' : match[1];
+  }
+
+  // Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+  function _objectIs(a, b) {
+    // SameValue algorithm
+    if (a === b) {
+      // Steps 1-5, 7-10
+      // Steps 6.b-6.e: +0 != -0
+      return a !== 0 || 1 / a === 1 / b;
+    } else {
+      // Step 6.a: NaN == NaN
+      return a !== a && b !== b;
+    }
+  }
+
+  var _objectIs$1 = typeof Object.is === 'function' ? Object.is : _objectIs;
+
+  /**
+   * private _uniqContentEquals function.
+   * That function is checking equality of 2 iterator contents with 2 assumptions
+   * - iterators lengths are the same
+   * - iterators values are unique
+   *
+   * false-positive result will be returned for comparision of, e.g.
+   * - [1,2,3] and [1,2,3,4]
+   * - [1,1,1] and [1,2,3]
+   * */
+
+  function _uniqContentEquals(aIterator, bIterator, stackA, stackB) {
+    var a = _arrayFromIterator(aIterator);
+
+    var b = _arrayFromIterator(bIterator);
+
+    function eq(_a, _b) {
+      return _equals(_a, _b, stackA.slice(), stackB.slice());
+    } // if *a* array contains any element that is not included in *b*
+
+
+    return !_includesWith(function (b, aItem) {
+      return !_includesWith(eq, aItem, b);
+    }, b, a);
+  }
+
+  function _equals(a, b, stackA, stackB) {
+    if (_objectIs$1(a, b)) {
+      return true;
+    }
+
+    var typeA = type(a);
+
+    if (typeA !== type(b)) {
+      return false;
+    }
+
+    if (a == null || b == null) {
+      return false;
+    }
+
+    if (typeof a['fantasy-land/equals'] === 'function' || typeof b['fantasy-land/equals'] === 'function') {
+      return typeof a['fantasy-land/equals'] === 'function' && a['fantasy-land/equals'](b) && typeof b['fantasy-land/equals'] === 'function' && b['fantasy-land/equals'](a);
+    }
+
+    if (typeof a.equals === 'function' || typeof b.equals === 'function') {
+      return typeof a.equals === 'function' && a.equals(b) && typeof b.equals === 'function' && b.equals(a);
+    }
+
+    switch (typeA) {
+      case 'Arguments':
+      case 'Array':
+      case 'Object':
+        if (typeof a.constructor === 'function' && _functionName(a.constructor) === 'Promise') {
+          return a === b;
+        }
+
+        break;
+
+      case 'Boolean':
+      case 'Number':
+      case 'String':
+        if (!(typeof a === typeof b && _objectIs$1(a.valueOf(), b.valueOf()))) {
+          return false;
+        }
+
+        break;
+
+      case 'Date':
+        if (!_objectIs$1(a.valueOf(), b.valueOf())) {
+          return false;
+        }
+
+        break;
+
+      case 'Error':
+        return a.name === b.name && a.message === b.message;
+
+      case 'RegExp':
+        if (!(a.source === b.source && a.global === b.global && a.ignoreCase === b.ignoreCase && a.multiline === b.multiline && a.sticky === b.sticky && a.unicode === b.unicode)) {
+          return false;
+        }
+
+        break;
+    }
+
+    var idx = stackA.length - 1;
+
+    while (idx >= 0) {
+      if (stackA[idx] === a) {
+        return stackB[idx] === b;
+      }
+
+      idx -= 1;
+    }
+
+    switch (typeA) {
+      case 'Map':
+        if (a.size !== b.size) {
+          return false;
+        }
+
+        return _uniqContentEquals(a.entries(), b.entries(), stackA.concat([a]), stackB.concat([b]));
+
+      case 'Set':
+        if (a.size !== b.size) {
+          return false;
+        }
+
+        return _uniqContentEquals(a.values(), b.values(), stackA.concat([a]), stackB.concat([b]));
+
+      case 'Arguments':
+      case 'Array':
+      case 'Object':
+      case 'Boolean':
+      case 'Number':
+      case 'String':
+      case 'Date':
+      case 'Error':
+      case 'RegExp':
+      case 'Int8Array':
+      case 'Uint8Array':
+      case 'Uint8ClampedArray':
+      case 'Int16Array':
+      case 'Uint16Array':
+      case 'Int32Array':
+      case 'Uint32Array':
+      case 'Float32Array':
+      case 'Float64Array':
+      case 'ArrayBuffer':
+        break;
+
+      default:
+        // Values of other types are only equal if identical.
+        return false;
+    }
+
+    var keysA = keys(a);
+
+    if (keysA.length !== keys(b).length) {
+      return false;
+    }
+
+    var extendedStackA = stackA.concat([a]);
+    var extendedStackB = stackB.concat([b]);
+    idx = keysA.length - 1;
+
+    while (idx >= 0) {
+      var key = keysA[idx];
+
+      if (!(_has(key, b) && _equals(b[key], a[key], extendedStackA, extendedStackB))) {
+        return false;
+      }
+
+      idx -= 1;
+    }
+
+    return true;
+  }
+
+  /**
+   * Returns `true` if its arguments are equivalent, `false` otherwise. Handles
+   * cyclical data structures.
+   *
+   * Dispatches symmetrically to the `equals` methods of both arguments, if
+   * present.
+   *
+   * @func
+   * @memberOf R
+   * @since v0.15.0
+   * @category Relation
+   * @sig a -> b -> Boolean
+   * @param {*} a
+   * @param {*} b
+   * @return {Boolean}
+   * @example
+   *
+   *      R.equals(1, 1); //=> true
+   *      R.equals(1, '1'); //=> false
+   *      R.equals([1, 2, 3], [1, 2, 3]); //=> true
+   *
+   *      const a = {}; a.v = a;
+   *      const b = {}; b.v = b;
+   *      R.equals(a, b); //=> true
+   */
+
+  var equals =
+  /*#__PURE__*/
+  _curry2(function equals(a, b) {
+    return _equals(a, b, [], []);
+  });
+
+  /**
+   * Returns `true` if one or both of its arguments are `true`. Returns `false`
+   * if both arguments are `false`.
+   *
+   * @func
+   * @memberOf R
+   * @since v0.1.0
+   * @category Logic
+   * @sig a -> b -> a | b
+   * @param {Any} a
+   * @param {Any} b
+   * @return {Any} the first argument if truthy, otherwise the second argument.
+   * @see R.either, R.xor
+   * @example
+   *
+   *      R.or(true, true); //=> true
+   *      R.or(true, false); //=> true
+   *      R.or(false, true); //=> true
+   *      R.or(false, false); //=> false
+   */
+
+  var or =
+  /*#__PURE__*/
+  _curry2(function or(a, b) {
+    return a || b;
+  });
+
+  /**
+   * A function wrapping calls to the two functions in an `||` operation,
+   * returning the result of the first function if it is truth-y and the result
+   * of the second function otherwise. Note that this is short-circuited,
+   * meaning that the second function will not be invoked if the first returns a
+   * truth-y value.
+   *
+   * In addition to functions, `R.either` also accepts any fantasy-land compatible
+   * applicative functor.
+   *
+   * @func
+   * @memberOf R
+   * @since v0.12.0
+   * @category Logic
+   * @sig (*... -> Boolean) -> (*... -> Boolean) -> (*... -> Boolean)
+   * @param {Function} f a predicate
+   * @param {Function} g another predicate
+   * @return {Function} a function that applies its arguments to `f` and `g` and `||`s their outputs together.
+   * @see R.or
+   * @example
+   *
+   *      const gt10 = x => x > 10;
+   *      const even = x => x % 2 === 0;
+   *      const f = R.either(gt10, even);
+   *      f(101); //=> true
+   *      f(8); //=> true
+   *
+   *      R.either(Maybe.Just(false), Maybe.Just(55)); // => Maybe.Just(55)
+   *      R.either([false, false, 'a'], [11]) // => [11, 11, "a"]
+   */
+
+  var either =
+  /*#__PURE__*/
+  _curry2(function either(f, g) {
+    return _isFunction(f) ? function _either() {
+      return f.apply(this, arguments) || g.apply(this, arguments);
+    } : lift(or)(f, g);
+  });
+
   /**
    * Creates a function that will process either the `onTrue` or the `onFalse`
    * function depending upon the result of the `condition` predicate.
@@ -1345,6 +1815,38 @@
     return val != null && val.constructor === Ctor || val instanceof Ctor;
   });
 
+  /**
+   * Returns `true` if the specified object property is equal, in
+   * [`R.equals`](#equals) terms, to the given value; `false` otherwise.
+   * You can test multiple properties with [`R.whereEq`](#whereEq).
+   *
+   * @func
+   * @memberOf R
+   * @since v0.1.0
+   * @category Relation
+   * @sig String -> a -> Object -> Boolean
+   * @param {String} name
+   * @param {*} val
+   * @param {*} obj
+   * @return {Boolean}
+   * @see R.whereEq, R.propSatisfies, R.equals
+   * @example
+   *
+   *      const abby = {name: 'Abby', age: 7, hair: 'blond'};
+   *      const fred = {name: 'Fred', age: 12, hair: 'brown'};
+   *      const rusty = {name: 'Rusty', age: 10, hair: 'brown'};
+   *      const alois = {name: 'Alois', age: 15, disposition: 'surly'};
+   *      const kids = [abby, fred, rusty, alois];
+   *      const hasBrownHair = R.propEq('hair', 'brown');
+   *      R.filter(hasBrownHair, kids); //=> [fred, rusty]
+   */
+
+  var propEq =
+  /*#__PURE__*/
+  _curry3(function propEq(name, val, obj) {
+    return equals(val, obj[name]);
+  });
+
   const rail = curry(function _rail(condition, badPath, input) {
     return ifElse(
       condition,
@@ -1387,6 +1889,11 @@
     )(input)
   });
 
+  const isEither = either(
+    propEq('isLeft', true),
+    propEq('isRight', true)
+  );
+
   const isFunction = is(Function);
 
   curry(function _expectFunction([
@@ -1404,9 +1911,12 @@
   });
 
   exports.bimap = bimap;
+  exports.chain = chain;
   exports.fold = fold;
   exports.guideRail = guideRail;
   exports.handrail = handrail;
+  exports.isEither = isEither;
+  exports.map = map;
   exports.multiRail = multiRail;
   exports.rail = rail;
 
