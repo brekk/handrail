@@ -1,7 +1,0 @@
-export {ap} from '@either/ap'
-export {isEither} from '@either/assert'
-export {bimap} from '@either/bimap'
-export {fold} from '@either/fold'
-export {Left, GuidedLeft} from '@either/guided-left'
-export {Right, GuidedRight} from '@either/guided-right'
-export {guided} from '@either/guided'

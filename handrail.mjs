@@ -1,1 +1,68 @@
-import{K,ap,chain,curry,curryObjectN,filter,isFunction,isObject,keys,length,map,pipe,reject}from'f-utility';import{Left,Right}from'fantasy-eithers';import{e1,e2}from'entrust';var isEither=function(a){return a&&isObject(a)&&a.fold&&isFunction(a.fold)},guided=curry(function(a,b){return isEither(b)?b:a(b)}),Left$1=Left,GuidedLeft=guided(Left$1),Right$1=Right,GuidedRight=guided(Right$1),plural=function(a){return 1<a.length?'s':''},expectFunctionProps=curry(function(a,b){return new Error(a+': Expected '+b.join(', ')+' to be function'+plural(b)+'.')}),rejectNonFunctions=reject(isFunction),safeRailInputs=pipe(rejectNonFunctions,Object.keys),rail=curry(function(a,b,c){if(null==c)return GuidedLeft(new Error('rail: Expected to be given non-null input.'));var d=safeRailInputs({assertion:a,wrongPath:b});if(0<d.length)return GuidedLeft(expectFunctionProps('rail',d));var e=a(c);return(e?GuidedRight:pipe(b,GuidedLeft))(c)}),multiRail=curry(function(a,b,c){return chain(rail(a,b),c)}),keyLength=pipe(keys,length),allPropsAreFunctions=pipe(function(a){return[a]},ap([pipe(filter(isFunction),keyLength,Number),keyLength]),function(a){var b=a[0],c=a[1];return b===c}),safeWarn=curry(function(a,b){return pipe(rejectNonFunctions,keys,expectFunctionProps(a))(b)}),internalRailSafety=curryObjectN(3,function(a){return rail(K(allPropsAreFunctions(a)),K(safeWarn('handrail',a)))}),handrail=curry(function(a,b,c,d){return pipe(internalRailSafety({assertion:a,wrongPath:b,rightPath:c}),multiRail(a,b),map(c))(d)}),guideRail=curry(function(a,b,c){var d=a[0],e=a.slice(1),f=d[0],g=d[1];return pipe.apply(void 0,[rail(f,g)].concat(map(function(b){var c=b[0],a=b[1];return multiRail(c,a)},e),[map(b)]))(c)}),ap$1=e1('ap'),bimap=e2('bimap'),fold=e2('fold'),map$1=map,chain$1=chain;export{map$1 as map,chain$1 as chain,handrail,rail as baluster,handrail as balustrade,fold as net,rail,multiRail,guideRail,ap$1 as ap,isEither,bimap,fold,Left$1 as Left,GuidedLeft,Right$1 as Right,GuidedRight,guided};
+import Either from 'easy-street';
+import { curry, ifElse, pipe, chain, map, apply, either, propEq, is, always } from 'ramda';
+export { chain, map } from 'ramda';
+
+const rail = curry(function _rail(condition, badPath, input) {
+  return ifElse(
+    condition,
+    Either.Right,
+    pipe(badPath, Either.Left)
+  )(input)
+});
+
+const multiRail = curry(function _multiRail(
+  condition,
+  badPath,
+  input
+) {
+  return chain(rail(condition, badPath), input)
+});
+
+const handrail = curry(function _handrail(
+  condition,
+  badPath,
+  goodPath,
+  input
+) {
+  return pipe(rail(condition, badPath), map(goodPath))(input)
+});
+
+const guideRail = curry(function guideRail(
+  rails,
+  goodPath,
+  input
+) {
+  const multiMap = apply(multiRail);
+  const [first, ...rest] = rails;
+  const [firstAssertion, wrongPath] = first;
+  return pipe(
+    ...[
+      rail(firstAssertion, wrongPath),
+      ...map(multiMap, rest),
+      map(goodPath)
+    ]
+  )(input)
+});
+
+const isEither = either(
+  propEq('isLeft', true),
+  propEq('isRight', true)
+);
+
+const isFunction = is(Function);
+
+curry(function _expectFunction([
+  name,
+  f
+]) {
+  return ifElse(isFunction, always(false), always(name))(f)
+});
+
+const bimap = curry(function _bimap(f, g, x) {
+  return x.bimap(f, g)
+});
+const fold = curry(function _fold(f, g, x) {
+  return x.fold(f, g)
+});
+
+export { bimap, fold, guideRail, handrail, isEither, multiRail, rail };
