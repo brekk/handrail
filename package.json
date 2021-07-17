@@ -48,7 +48,7 @@
     "ripjam": "^0.0.9",
     "rollup": "^2.45.2"
   },
-  "browser": "handrail",
+  "browser": "handrail.umd.js",
   "clinton": {
     "inherit": false,
     "rules": {

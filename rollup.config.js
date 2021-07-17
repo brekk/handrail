@@ -16,33 +16,26 @@ const plugins = [
   commonjs()
 ]
 
-const build = ({ input, file, format }) => ({
-  input,
-  external,
-  output: [{ file, format }],
-  plugins
-})
-
-export default map(build, [
+const build = (input, name) => [
   {
-    input: `src/index.js`,
-    file: pkg.main,
-    format: `cjs`
-  },
-  {
-    input: `src/index.js`,
-    file: 'handrail.mjs',
-    format: `esm`
-  },
-  {
-    input: `src/debug.js`,
+    input,
     external,
-    file: 'debug.js',
-    format: `cjs`
+    output: [
+      { name, file: name + '.js', format: 'cjs' },
+      { name, file: name + '.mjs', format: 'esm' }
+    ],
+    plugins
   },
   {
-    input: `src/debug.js`,
-    file: 'debug.mjs',
-    format: `esm`
+    input,
+    output: [{ name, file: name + '.umd.js', format: 'umd' }],
+    plugins
   }
-])
+]
+
+const toBuild = [
+  ...build(`src/index.js`, pkg.name),
+  ...build(`src/debug.js`, `debug`)
+]
+
+export default toBuild
