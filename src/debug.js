@@ -1,4 +1,4 @@
-import Either from "easy-street"
+import Either from 'easy-street'
 import {
   __ as $,
   any,
@@ -10,23 +10,16 @@ import {
   ifElse,
   includes,
   join,
-  length,
-  lt,
   map,
   complement,
-  nth,
   pipe,
   toPairs,
-  values,
-} from "ramda"
-import { isFunction, expectFunction } from "./utils"
-import {
-  rail as __rail,
-  multiRail as __multiRail,
-  guideRail as __guideRail,
-} from "./index"
+  values
+} from 'ramda'
+import { isFunction, expectFunction } from './utils'
+import { rail as __rail, multiRail as __multiRail } from './index'
 
-const joint = " and "
+const joint = ' and '
 
 const expectedFunctions = pipe(
   toPairs,
@@ -41,7 +34,10 @@ const expectedFunctions = pipe(
   Either.Left
 )
 
-const anyValuesAreNotFunctions = pipe(values, any(complement(isFunction)))
+const anyValuesAreNotFunctions = pipe(
+  values,
+  any(complement(isFunction))
+)
 const callFunctionSafely = curry((fn, input, args) =>
   pipe(values, concat($, [input]), apply(fn))(args)
 )
@@ -54,7 +50,11 @@ const delegatedCall = curry(function _delegatedCall(fn, args, input) {
   )(args)
 })
 
-export const rail = curry(function _safetyRail(condition, badPath, input) {
+export const rail = curry(function _safetyRail(
+  condition,
+  badPath,
+  input
+) {
   return delegatedCall(__rail, { condition, badPath }, input)
 })
 
@@ -84,6 +84,10 @@ export const guideRail = curry(function _safetyGuideRail(
   const [first, ...rest] = rails
   const [firstAssertion, wrongPath] = first
   return pipe(
-    ...[rail(firstAssertion, wrongPath), ...map(multiMap, rest), map(goodPath)]
+    ...[
+      rail(firstAssertion, wrongPath),
+      ...map(multiMap, rest),
+      map(goodPath)
+    ]
   )(input)
 })

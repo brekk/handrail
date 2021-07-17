@@ -24,4 +24,16 @@ export default [
     output: [{ file: "handrail.mjs", format: `esm` }],
     plugins,
   },
+  {
+    input: `src/debug.js`,
+    external,
+    output: [{ file: "debug.js", format: `cjs` }],
+    plugins,
+  },
+  {
+    input: `src/debug.js`,
+    external,
+    output: [{ file: "debug.mjs", format: `esm` }],
+    plugins,
+  },
 ]

@@ -1,4 +1,34 @@
 {
+  "name": "handrail",
+  "version": "1.4.0",
+  "description": "a toolset for logical disjunctions / safety for your functional pipelines",
+  "license": "ISC",
+  "repository": "brekk/handrail",
+  "author": "brekk",
+  "main": "handrail.js",
+  "scripts": {
+    "lint": "nps lint",
+    "rollup": "nps rollup",
+    "build": "nps build",
+    "bundle": "nps bundle",
+    "test": "nps test",
+    "test-snapshot": "nps test.snapshot",
+    "test-coverage": "nps test.coverage",
+    "care": "nps care"
+  },
+  "keywords": [
+    "safety",
+    "monad",
+    "either",
+    "or",
+    "logical",
+    "disjunction",
+    "encapsulate"
+  ],
+  "dependencies": {
+    "easy-street": "^0.0.0",
+    "ramda": "^0.27.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
     "@babel/eslint-parser": "^7.13.14",
@@ -18,16 +48,44 @@
     "ripjam": "^0.0.9",
     "rollup": "^2.45.2"
   },
-  "name": "handrail",
-  "version": "1.4.0",
-  "description": "add safety to your building",
-  "main": "handrail.js",
-  "repository": "https://github.com/brekk/handrail",
-  "author": "Brekk <brekk@brekkbockrath.com>",
-  "license": "ISC",
-  "private": false,
-  "dependencies": {
-    "easy-street": "^0.0.0",
-    "ramda": "^0.27.1"
-  }
+  "browser": "handrail",
+  "clinton": {
+    "inherit": false,
+    "rules": {
+      "cli": "error",
+      "editorconfig": "off",
+      "filename-case": [
+        "error",
+        {
+          "case": "kebabCase"
+        }
+      ],
+      "gulp": ["error", "optional"],
+      "keywords": "error",
+      "license": "ISC",
+      "max-depth": "warn",
+      "no-callback": "error",
+      "no-dup-keywords": "error",
+      "no-empty-keywords": "error",
+      "no-git-merge-conflict": "error",
+      "pkg-dependency-order": "error",
+      "pkg-description": "off",
+      "pkg-engine": "off",
+      "pkg-main": "error",
+      "pkg-name": "error",
+      "pkg-normalize": "warn",
+      "pkg-property-order": "error",
+      "pkg-schema": "error",
+      "pkg-shorthand-repository": "error",
+      "pkg-user-order": "error",
+      "readme": "error",
+      "test-script": "error",
+      "use-travis": "off",
+      "valid-version": "error",
+      "ava": "off",
+      "gitignore": "error",
+      "xo": "off"
+    }
+  },
+  "reveal": true
 }
