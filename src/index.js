@@ -1,17 +1,28 @@
-import {map as _map, chain as _chain} from 'f-utility'
+import Either from "easy-street"
+import { apply, chain, map, curry, ifElse, pipe } from "ramda"
 
-export const map = _map
-export const chain = _chain
+export const rail = curry(function _rail(condition, badPath, input) {
+  return ifElse(condition, Either.Right, pipe(badPath, Either.Left))(input)
+})
 
-export {
-  handrail
-} from './handrail'
-export * from './rail'
-export * from './multirail'
-export * from './guiderail'
-export * from '@either/index'
+export const multiRail = curry(function _multiRail(condition, badPath, input) {
+  return chain(rail(condition, badPath), input)
+})
 
-// Extended metaphor API
-export {rail as baluster} from '@handrail/rail'
-export {handrail as balustrade} from '@handrail/handrail'
-export {fold as net} from '@either/fold'
+export const handrail = curry(function _handrail(
+  condition,
+  badPath,
+  goodPath,
+  input
+) {
+  return pipe(rail(condition, badPath), map(goodPath))(input)
+})
+
+export const guideRail = curry(function guideRail(rails, goodPath, input) {
+  const multiMap = apply(multiRail)
+  const [first, ...rest] = rails
+  const [firstAssertion, wrongPath] = first
+  return pipe(
+    ...[rail(firstAssertion, wrongPath), ...map(multiMap, rest), map(goodPath)]
+  )(input)
+})

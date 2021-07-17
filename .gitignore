@@ -1,7 +1,4 @@
+.wakatime.cfg
 node_modules
-.nyc_output
-bin
-lib
 coverage
-docs
-dist
+.DS_Store
