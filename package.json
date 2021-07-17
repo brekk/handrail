@@ -87,5 +87,6 @@
       "xo": "off"
     }
   },
-  "reveal": true
+  "reveal": true,
+  "files": ["handrail.js", "handrail.mjs", "debug.js", "debug.mjs"]
 }

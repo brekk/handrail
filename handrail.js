@@ -10,10 +10,18 @@ function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'defau
 var Either__default = /*#__PURE__*/_interopDefaultLegacy(Either);
 
 const rail = ramda.curry(function _rail(condition, badPath, input) {
-  return ramda.ifElse(condition, Either__default['default'].Right, ramda.pipe(badPath, Either__default['default'].Left))(input)
+  return ramda.ifElse(
+    condition,
+    Either__default['default'].Right,
+    ramda.pipe(badPath, Either__default['default'].Left)
+  )(input)
 });
 
-const multiRail = ramda.curry(function _multiRail(condition, badPath, input) {
+const multiRail = ramda.curry(function _multiRail(
+  condition,
+  badPath,
+  input
+) {
   return ramda.chain(rail(condition, badPath), input)
 });
 
@@ -26,12 +34,20 @@ const handrail = ramda.curry(function _handrail(
   return ramda.pipe(rail(condition, badPath), ramda.map(goodPath))(input)
 });
 
-const guideRail = ramda.curry(function guideRail(rails, goodPath, input) {
+const guideRail = ramda.curry(function guideRail(
+  rails,
+  goodPath,
+  input
+) {
   const multiMap = ramda.apply(multiRail);
   const [first, ...rest] = rails;
   const [firstAssertion, wrongPath] = first;
   return ramda.pipe(
-    ...[rail(firstAssertion, wrongPath), ...ramda.map(multiMap, rest), ramda.map(goodPath)]
+    ...[
+      rail(firstAssertion, wrongPath),
+      ...ramda.map(multiMap, rest),
+      ramda.map(goodPath)
+    ]
   )(input)
 });
 
